@@ -6,8 +6,9 @@ import AdminDashboard from "./Components/Dashboard/AdminDashboard";
 
 function App() {
   return (
-    <Router>
+    <Router>  
       <Routes>
+      <Route path="/" element={<Register />} /> 
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/dashboard" element={<Dashboard />} />

@@ -1,15 +1,16 @@
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
-import { loginUser } from "../../authentication/authService";
-import { setUser } from "../../Redux/userSlice";
-import { useNavigate } from "react-router-dom";
-import "./LoginPage.css"
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { loginUser } from "../../authentication/userThunks";
+import { useNavigate, Link } from "react-router-dom";
+
 const Login = () => {
   const [loginData, setLoginData] = useState({ email: "", password: "" });
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const { user, role, loading, error } = useSelector((state) => state.user);
+  console.log(user)
+  console.log(role)
   const handleChange = (e) => {
     setLoginData({ ...loginData, [e.target.name]: e.target.value });
   };
@@ -17,37 +18,50 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const data = await loginUser(loginData);
-      console.log(data)
-      if(data.error){
-        alert("invalid credentials")
-      }
-      else{
-        dispatch(setUser(data));
-        alert("Login successful!");
-       if(data.role=="CUSTOMER"){
-        navigate("/dashboard");
-       }
-       else{
-        navigate("/admindashboard");
-
-       }
-        
-      }
-      
-    } catch (error) {
+      await dispatch(loginUser(loginData)).unwrap();
+      alert("Login successful!");
+    } catch (err) {
       alert("Invalid credentials!");
     }
   };
+
+  useEffect(() => {
+    if (role) {
+      if (role === "CUSTOMER") {
+        navigate("/dashboard");
+      } else {
+        navigate("/admindashboard");
+      }
+    }
+  }, [user, role, navigate]);
 
   return (
     <div className="container mt-4">
       <h2>Login</h2>
       <form onSubmit={handleSubmit}>
-        <input type="email" name="email" placeholder="Email" onChange={handleChange} className="form-control mb-2"/>
-        <input type="password" name="password" placeholder="Password" onChange={handleChange} className="form-control mb-2"/>
-        <button type="submit" className="btn btn-success">Login</button>
-        <p>If You not an already user <Link to={"/register"}>Register</Link></p>
+        <input
+          type="email"
+          name="email"
+          placeholder="Email"
+          onChange={handleChange}
+          className="form-control mb-2"
+          required
+        />
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          onChange={handleChange}
+          className="form-control mb-2"
+          required
+        />
+        <button type="submit" className="btn btn-success" disabled={loading}>
+          {loading ? "Logging in..." : "Login"}
+        </button>
+        {error && <p className="text-danger mt-2">{error}</p>}
+        <p>
+          If you are not already a user, <Link to={"/register"}>Register</Link>
+        </p>
       </form>
     </div>
   );
