@@ -1,16 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../../authentication/userThunks";
-import { useNavigate, Link } from "react-router-dom";
-
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 const Login = () => {
   const [loginData, setLoginData] = useState({ email: "", password: "" });
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  const { user, role, loading, error } = useSelector((state) => state.user);
-  console.log(user)
-  console.log(role)
+  const { loading } = useSelector((state) => state.user); // error handled via toast
+  
   const handleChange = (e) => {
     setLoginData({ ...loginData, [e.target.name]: e.target.value });
   };
@@ -19,51 +18,105 @@ const Login = () => {
     e.preventDefault();
     try {
       await dispatch(loginUser(loginData)).unwrap();
-      alert("Login successful!");
+      toast.success("Login successful!");
+      const role=localStorage.getItem("role")
+      if(role=="ADMIN"){navigate("/admindashboard")}else{
+        navigate("/dashboard")
+      }
+       // Or wherever you want to redirect after login
     } catch (err) {
-      alert("Invalid credentials!");
+      toast.error(err?.error || "Invalid credentials!");
     }
   };
 
-  useEffect(() => {
-    if (role) {
-      if (role === "CUSTOMER") {
-        navigate("/dashboard");
-      } else {
-        navigate("/admindashboard");
-      }
-    }
-  }, [user, role, navigate]);
-
   return (
-    <div className="container mt-4">
-      <h2>Login</h2>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          onChange={handleChange}
-          className="form-control mb-2"
-          required
-        />
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          onChange={handleChange}
-          className="form-control mb-2"
-          required
-        />
-        <button type="submit" className="btn btn-success" disabled={loading}>
-          {loading ? "Logging in..." : "Login"}
-        </button>
-        {error && <p className="text-danger mt-2">{error}</p>}
-        <p>
-          If you are not already a user, <Link to={"/register"}>Register</Link>
-        </p>
-      </form>
+    <>
+          <ToastContainer position="top-right" autoClose={3000} />
+    <div className="container-fluid bg-light d-flex align-items-center justify-content-center ">
+      <div className="row bg-white shadow rounded-4 w-100 p-5 min-vh-100" style={{  height: "auto" }}>
+        {/* Left Side - Login Form */}
+        <div className="col-md-6 border-end">
+          <div className="text-start mb-4">
+            <i className="bi bi-box fs-1 text-primary"></i>
+            <h3 className="fw-bold">Welcome Back <span>👋</span></h3>
+            <p className="text-muted">Login to access your dashboard</p>
+          </div>
+          <form onSubmit={handleSubmit}>
+            <div className="mb-3">
+              <label className="form-label"><b>Email Address</b></label>
+              <div className="input-group">
+                <span className="input-group-text"><i className="bi bi-envelope"></i></span>
+                <input
+                  type="email"
+                  name="email"
+                  className="form-control"
+                  placeholder="Email Address"
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="mb-3">
+              <label className="form-label"><b>Password</b></label>
+              <div className="input-group">
+                <span className="input-group-text"><i className="bi bi-lock"></i></span>
+                <input
+                  type="password"
+                  name="password"
+                  className="form-control"
+                  placeholder="Password"
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="d-flex justify-content-between mb-3">
+              <div></div>
+              <Link to="/forgot-password" className="text-decoration-none text-primary">Forgot password?</Link>
+            </div>
+
+            <button type="submit" className="btn btn-primary w-100" disabled={loading}>
+              {loading ? "Logging in..." : "Login"}
+            </button>
+
+            <p className="mt-3">
+             <b> Don’t have an account? </b><Link to="/register" className="text-primary" >Sign Up</Link>
+            </p>
+          </form>
+        </div>
+
+        {/* Right Side - KYC Info */}
+        <div className="col-md-6 d-flex flex-column align-items-center justify-content-center text-center px-4">
+          <img
+            src="login.png"
+            alt="KYC Illustration"
+            className="img-fluid mb-3"
+            style={{ maxHeight: "200px" }}
+          />
+          <h5 className="fw-bold">Unlock Full Access with KYC <i className="bi bi-check2-square text-success"></i></h5>
+          <p className="text-muted small">
+            Open accounts, apply for loans, and track repayments — right from your dashboard.
+          </p>
+
+          <div className="alert alert-warning w-100 py-2 small">
+            <i className="bi bi-exclamation-triangle me-2"></i>
+            Complete your KYC to access all services securely.
+          </div>
+
+          <div className="row w-150 text-start small">
+            <div className="col-6 mb-2"><i className="bi bi-bank me-2 text-primary fs-2"></i>Open Bank Account</div>
+            <div className="col-6 mb-2"><i className="bi bi-file-earmark-text me-2 text-primary fs-2"></i>Apply for Loan</div>
+            <div className="col-6"><i className="bi bi-cash-stack me-2 text-primary fs-2"></i>Track Repayments</div>
+            <div className="col-6"><i className="bi bi-bar-chart-line me-2 text-primary fs-2"></i>View Loan Status</div>
+          </div>
+        </div>
+      </div>
+   
     </div>
+    </>
+    
   );
 };
 

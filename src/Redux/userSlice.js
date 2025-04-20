@@ -2,6 +2,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { registerUser, loginUser } from "../authentication/userThunks";
 
+
 const initialState = {
   user: null,
   token: null,
@@ -10,6 +11,7 @@ const initialState = {
   error: null,
 };
 
+// const userslice2=createSlice()
 const userSlice = createSlice({
   name: "user",
   initialState,
@@ -27,17 +29,18 @@ const userSlice = createSlice({
       .addCase(registerUser.pending, (state) => {
         state.loading = true;
         state.error = null;
+        state.message = null;
       })
       .addCase(registerUser.fulfilled, (state, action) => {
         state.loading = false;
-        state.user = action.payload.user;
-        state.token = action.payload.token;
-        state.role = action.payload.role;
+        state.message = action.payload; // <-- "User registered successfully"
       })
       .addCase(registerUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.payload; // <-- "Email is already registered"
+        console.log(action.payload)
       })
+      
 
       // Login User
       .addCase(loginUser.pending, (state) => {
@@ -49,10 +52,15 @@ const userSlice = createSlice({
         state.user = action.payload.user;
         state.token = action.payload.token;
         state.role = action.payload.role;
+        localStorage.setItem("role", action.payload.role);
+        // localstorage.setItem("role",action.payload.role)
+        // console.log(action.payload.role)
+       
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.error = action.payload.error;
+        
       });
   },
 });
