@@ -25,7 +25,7 @@ const Register = () => {
   
 
 
-  const { otpSent, otpVerified } = useSelector((state) => state.otp);
+  const { otpSent, otpVerified,otpLoading } = useSelector((state) => state.otp);
   const { error, loading } = useSelector((state) => state.user);
   const inputsRef = useRef([]);
   const handleChange = (e) => {
@@ -209,17 +209,27 @@ const Register = () => {
                 placeholder="your@email.com"
                 required
               />
+              
               <button
-                type="button"
-                className="btn btn-primary"
-                onClick={requestOtp}
-                disabled={timer > 0}
-              >
-                <i className="bi bi-send-fill"></i>
-                {timer > 0
-                  ? ` Resend in ${timer}s`
-                  : (otpSent ? " Resend OTP" : " Send OTP")}
-              </button>
+  type="button"
+  className="btn btn-primary d-flex align-items-center gap-2"
+  onClick={requestOtp}
+  disabled={timer > 0 || otpLoading}
+>
+  {otpLoading ? (
+    <>
+      <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+      Sending...
+    </>
+  ) : (
+    <>
+      <i className="bi bi-send-fill"></i>
+      {timer > 0
+        ? `Resend in ${timer}s`
+        : otpSent ? "Resend OTP" : "Send OTP"}
+    </>
+  )}
+</button>
             </div>
 
             {otpSent && !otpVerified && (
