@@ -5,13 +5,9 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "../SharedComponents/Navbar";
 const Dashboard = () => {
   const user = useSelector((state) => state.user);
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+ 
 
-  const handleLogout = () => {
-    dispatch(logout());
-    navigate("/login");
-  };
+
 
   return (
     <>
@@ -19,7 +15,7 @@ const Dashboard = () => {
     <div className="container mt-4">
       <h2>Welcome, {user.user ? user.user.fullName : "User"}</h2>
       <p>Role: {user.role}</p>
-      <button onClick={handleLogout} className="btn btn-danger">Logout</button>
+      
     </div></>
   );
 };

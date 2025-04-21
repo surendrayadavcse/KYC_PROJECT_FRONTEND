@@ -34,6 +34,9 @@ const AdminDashboard = () => {
 
     fetchUsers();
   }, [dispatch]);
+  useEffect(() => {
+    dispatch(fetchAllServices());
+}, [dispatch, services.length])
 
   async function handleDelete(id) {
     try {
