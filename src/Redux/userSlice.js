@@ -9,6 +9,7 @@ const initialState = {
   role: null,
   loading: false,
   error: null,
+  kycstatus : null,
 };
 
 // const userslice2=createSlice()
@@ -53,8 +54,9 @@ const userSlice = createSlice({
         state.token = action.payload.token;
         state.role = action.payload.role;
         localStorage.setItem("role", action.payload.role);
-        // localstorage.setItem("role",action.payload.role)
+        localStorage.setItem("kycstatus",action.payload.kycstatus)
         // console.log(action.payload.role)
+        
        
       })
       .addCase(loginUser.rejected, (state, action) => {
