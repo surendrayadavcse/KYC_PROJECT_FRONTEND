@@ -8,6 +8,7 @@ import { ToastContainer } from "react-toastify";
 function App() {
   return (
     <>
+    <div className="bg-light min-vh-100 ">
     <Router>  
       <Routes>
       <Route path="/" element={<Register />} /> 
@@ -18,6 +19,7 @@ function App() {
       </Routes>
     </Router>
     <ToastContainer position="top-right" autoClose={2000} />
+    </div>
     </>
   );
 }
