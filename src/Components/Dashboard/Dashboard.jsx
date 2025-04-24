@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import Navbar from "../SharedComponents/Navbar";
+// import Navbar from "../SharedComponents/Navbar";
 import { fetchAllServices } from "../../Redux/serviceSlice";
 import { BsLockFill } from "react-icons/bs"; // Lock icon
 import { FiShield } from "react-icons/fi";
@@ -18,7 +18,7 @@ const Dashboard = () => {
 
   return (
     <>
-      <Navbar />
+    
     
       <div className="container mt-4 ">
 
@@ -70,7 +70,7 @@ const Dashboard = () => {
 
         <h4 className="fw-bold mb-4">Our Services</h4>
      
-        <div className="row g-4">
+        <div className="row g-4"> 
           {services.map((item, index) => (
             <div className="col-lg-3 col-md-6 col-sm-12" key={index}>
               <div className="card shadow-lg border-0 p-3  position-relative h-100">

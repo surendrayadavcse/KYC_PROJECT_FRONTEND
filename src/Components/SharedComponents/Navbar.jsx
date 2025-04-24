@@ -12,7 +12,9 @@ function Navbar() {
     dispatch(logout());
     navigate('/login');
   };
-
+ function handleprofile(){
+  navigate("/profile")
+ }
   return (
     <>
       <nav className="navbar navbar-expand-lg navbar-light bg-white shadow-sm p-3">
@@ -32,7 +34,7 @@ function Navbar() {
 
           {/* Right: Profile and Logout */}
           <div className="d-flex align-items-center ms-auto">
-            <img 
+            <img onClick={handleprofile}
               src="https://i.pravatar.cc/30" 
               alt="Profile" 
               className="rounded-circle me-2" 

@@ -22,6 +22,11 @@ const userSlice = createSlice({
       state.token = null;
       state.role = null;
       state.error = null;
+      state.id=null
+      localStorage.removeItem("role", action.payload.role);
+      localStorage.removeItem("kycstatus",action.payload.kycstatus)
+      localStorage.removeItem("id",action.payload.id)
+      
     },
   },
   extraReducers: (builder) => {
@@ -55,6 +60,7 @@ const userSlice = createSlice({
         state.role = action.payload.role;
         localStorage.setItem("role", action.payload.role);
         localStorage.setItem("kycstatus",action.payload.kycstatus)
+        localStorage.setItem("id",action.payload.id)
         // console.log(action.payload.role)
         
        
