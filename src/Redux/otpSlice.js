@@ -3,9 +3,9 @@ import axios from 'axios';
 
 export const sendOtpThunk = createAsyncThunk(
   'otp/sendOtp',
-  async ({email,mobile}, thunkAPI) => {
+  async ({ email, mobile }, thunkAPI) => {
     try {
-      console.log(mobile,"i am from thunk")
+      console.log(mobile, "i am from thunk");
       await axios.get(`http://localhost:9999/api/getOTP/${email}?mobile=${mobile}`);
       return;
     } catch (err) {
@@ -16,7 +16,6 @@ export const sendOtpThunk = createAsyncThunk(
     }
   }
 );
-
 
 export const verifyOtpThunk = createAsyncThunk(
   'otp/verifyOtp',
@@ -37,29 +36,45 @@ const otpSlice = createSlice({
     otpSent: false,
     otpVerified: false,
     otperror: null,
+    otpLoading: false
   },
   reducers: {
     resetOtpState: (state) => {
       state.otpSent = false;
       state.otpVerified = false;
-      state.error = null;
+      state.otperror = null;
+      state.otpLoading = false;
     }
   },
   extraReducers: (builder) => {
     builder
+      // Handle sendOtpThunk
+      .addCase(sendOtpThunk.pending, (state) => {
+        state.otpLoading = true;
+        state.otperror = null;
+      })
       .addCase(sendOtpThunk.fulfilled, (state) => {
+        state.otpLoading = false;
         state.otpSent = true;
         state.otperror = null;
       })
       .addCase(sendOtpThunk.rejected, (state, action) => {
+        state.otpLoading = false;
         state.otperror = action.payload;
-        console.log(action.payload)
+      })
+
+      // Handle verifyOtpThunk
+      .addCase(verifyOtpThunk.pending, (state) => {
+        state.loading = true;
+        state.otperror = null;
       })
       .addCase(verifyOtpThunk.fulfilled, (state) => {
+        state.loading = false;
         state.otpVerified = true;
         state.otperror = null;
       })
       .addCase(verifyOtpThunk.rejected, (state, action) => {
+        state.loading = false;
         state.otpVerified = false;
         state.otperror = action.payload;
       });
