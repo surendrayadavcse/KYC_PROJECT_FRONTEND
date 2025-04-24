@@ -9,6 +9,8 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 import "./index.css"
 ReactDOM.createRoot(document.getElementById("root")).render(
   <Provider store={store}>
+    <div className="bgcolr">
     <App />
+    </div>
   </Provider>
 );

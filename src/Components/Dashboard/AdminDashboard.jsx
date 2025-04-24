@@ -93,7 +93,7 @@ const AdminDashboard = () => {
 
 
       {/* Background Container */}
-      <div className="bg-light min-vh-100 py-4">
+      <div className="bg-light min-vh-100 py-4 ">
         <div className="container">
 
           {/* Stats Cards */}
