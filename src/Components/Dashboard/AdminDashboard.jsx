@@ -34,6 +34,9 @@ const AdminDashboard = () => {
 
     fetchUsers();
   }, [dispatch]);
+  useEffect(() => {
+    dispatch(fetchAllServices());
+}, [dispatch, services.length])
 
   async function handleDelete(id) {
     try {
@@ -85,12 +88,12 @@ const AdminDashboard = () => {
   return (
     <>
       {/* Navbar */}
-      <Navbar></Navbar>
+     
 
 
 
       {/* Background Container */}
-      <div className="bg-light min-vh-100 py-4">
+      <div className="bg-light min-vh-100 py-4 ">
         <div className="container">
 
           {/* Stats Cards */}

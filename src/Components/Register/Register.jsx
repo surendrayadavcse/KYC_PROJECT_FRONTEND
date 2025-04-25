@@ -255,7 +255,7 @@ const Register = () => {
                   type="submit"
                   className="btn w-100"
                   style={{
-                    backgroundColor: "#0d6efd",  // Blue button color
+                    backgroundColor: "#0d6efd",
                     color: "#fff",
                   }}
                   disabled={!otpVerified || loading}
