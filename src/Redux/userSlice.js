@@ -23,9 +23,9 @@ const userSlice = createSlice({
       state.role = null;
       state.error = null;
       state.id=null
-      localStorage.removeItem("role", action.payload.role);
-      localStorage.removeItem("kycstatus",action.payload.kycstatus)
-      localStorage.removeItem("id",action.payload.id)
+      localStorage.removeItem("role");
+      localStorage.removeItem("kycstatus")
+      localStorage.removeItem("id")
       
     },
   },

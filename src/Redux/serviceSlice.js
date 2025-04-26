@@ -1,11 +1,11 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-const API_BASE = 'http://localhost:9999/api/services';
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
 // Async thunks
 export const fetchAllServices = createAsyncThunk('services/fetchAll', async () => {
-  const res = await axios.get(`${API_BASE}/all`);
+  const res = await axios.get(`${baseUrl}/services/all`);
   return res.data;
 });
 
@@ -20,7 +20,7 @@ export const addService = createAsyncThunk(
         formData.append('icon', iconFile);
       }
 
-      const res = await axios.post(`${API_BASE}/add`, formData, {
+      const res = await axios.post(`${baseUrl}/services/add`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
 

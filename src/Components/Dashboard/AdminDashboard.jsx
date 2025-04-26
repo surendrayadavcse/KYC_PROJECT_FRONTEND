@@ -118,7 +118,7 @@ const AdminDashboard = () => {
 
           {/* Tabs */}
           <ul className="nav nav-pills mb-3">
-            {['All', 'PENDING', 'APPROVED'].map((status) => (
+            {['All', 'PENDING', 'KYC COMPLETED'].map((status) => (
               <li className="nav-item" key={status}>
                 <button
                   className={`nav-link ${filter === status ? 'active' : ''}`}
@@ -150,7 +150,7 @@ const AdminDashboard = () => {
                       <td>{user.email}</td>
                       <td>29/09/2001</td>
                       <td>
-                        <span className={`badge bg-${user.kycStatus === 'APPROVED' ? 'success' : 'warning'}`}>
+                        <span className={`badge bg-${user.kycStatus === 'KYC COMPLETED' ? 'success' : 'warning'}`}>
                           {user.kycStatus}
                         </span>
                       </td>

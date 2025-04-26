@@ -102,6 +102,8 @@ const Register = () => {
       await dispatch(verifyOtpThunk({ email, otp: finalOtp })).unwrap();
       toast.success("OTP verified successfully");
       setOtp(["", "", "", ""]);
+      
+      setTimer(0);
     } catch (err) {
       toast.error(err.message || "Invalid OTP");
     }
@@ -117,6 +119,7 @@ const Register = () => {
       toast.success("Registration successful!");
       resetForm();
       setOtp(["", "", "", ""]);
+     
       setTimeout(() => navigate("/login"), 2000);
     } catch (err) {
       toast.error(err.message || "Registration failed");
@@ -133,7 +136,7 @@ const Register = () => {
         <div className="col-md-6 pe-md-5">
           <div className="text-center mb-4">
             <i className="bi bi-bank2 fs-1 text-primary"></i>
-            <h3 className="fw-bold mt-2">Get Started with FinEdge</h3>
+            <h3 className="fw-bold mt-2">Get Started with HexaEdge</h3>
             <p className="text-muted small">Your personal banking assistant.</p>
           </div>
 
@@ -156,6 +159,7 @@ const Register = () => {
                     name="fullName"
                     className="form-control"
                     placeholder="Enter your full name"
+                    readOnly={otpVerified}
                   />
                   <div className="text-danger small"><ErrorMessage name="fullName" /></div>
                 </div>
@@ -167,6 +171,7 @@ const Register = () => {
                     name="mobile"
                     className="form-control"
                     placeholder="+91 8247380327"
+                    readOnly={otpVerified}
                   />
                   <div className="text-danger small"><ErrorMessage name="mobile" /></div>
                 </div>
@@ -178,32 +183,34 @@ const Register = () => {
                       name="email"
                       className="form-control"
                       placeholder="your@email.com"
+                      readOnly={otpVerified}
                     />
                     <div className="text-danger small"><ErrorMessage name="email" /></div>
                   </div>
 
                   <button
-                    type="button"
-                    className="btn btn-primary d-flex align-items-center gap-2"
-                    onClick={() => requestOtp(values)}
-                    disabled={timer > 0 || otpLoading || !values.email || !values.mobile}
-                    style={{
-                      width: '120px',
-                      height: '40px',
-                    }}
-                  >
-                    {otpLoading ? (
-                      <>
-                        <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                        Sending...
-                      </>
-                    ) : (
-                      <>
-                        <i className="bi bi-send-fill"></i>
-                        {timer > 0 ? `Resend in ${timer}s` : otpSent ? "Resend OTP" : "Send OTP"}
-                      </>
-                    )}
-                  </button>
+  type="button"
+  className="btn btn-primary d-flex align-items-center gap-2"
+  onClick={() => requestOtp(values)}
+  disabled={otpVerified || timer > 0 || otpLoading || !values.email || !values.mobile}
+  style={{
+    width: '120px',
+    height: '40px',
+  }}
+>
+  {otpLoading ? (
+    <>
+      <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+      Sending...
+    </>
+  ) : (
+    <>
+      <i className="bi bi-send-fill"></i>
+      {otpVerified ? null : (timer > 0 ? `Resend in ${timer}s` : otpSent ? "Resend OTP" : "Send OTP")}
+    </>
+  )}
+</button>
+
                 </div>
 
                 {otpSent && !otpVerified && (
@@ -234,6 +241,7 @@ const Register = () => {
                       onClick={() => verifyOtp(values.email)}
                       className="btn btn-secondary"
                       style={{ height: "40px", whiteSpace: "nowrap" }}
+                      hidden={otpVerified}
                     >
                       Verify OTP
                     </button>
@@ -282,7 +290,7 @@ const Register = () => {
           />
           <h5 className="fw-bold mt-4">Smarter Banking Begins Here</h5>
           <p className="text-muted small">
-            Open accounts, apply for loans, manage your money securely, all with FinEdge.
+            Open accounts, apply for loans, manage your money securely, all with HexaEdge.
           </p>
 
           <div className="row w-75 mt-3 mb-2">
