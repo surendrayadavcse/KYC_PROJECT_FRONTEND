@@ -7,7 +7,7 @@ console.log(id )
   const [profile, setProfile] = useState(null);
 
   useEffect(() => {
-    fetch(`http://localhost:9999/auth/profile/${id}`)
+    fetch(`http://localhost:9999/api/user/profile/${id}`)
       .then(res => res.json())
       .then(data => setProfile(data))
       .catch(err => console.error('Failed to load profile:', err));

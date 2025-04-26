@@ -7,4 +7,34 @@
     transform: translateY(-4px);
     box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
   }
+  .apply-btn {
+    transition: all 0.3s ease;
+  }
+  
+  .apply-btn:hover {
+    background-color: #0d6efd; /* Bootstrap primary color */
+    color: #fff;
+    font-weight: 600;
+  }
+  
+  .apply-btn:hover::after {
+    content: " Now ➔";
+  }
+  .service-card {
+    background: #fff;
+    border-radius: 1rem; /* Extra rounded */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05), inset 0 0 10px rgba(0, 0, 0, 0.02);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .service-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 8px 20px rgba(13, 110, 253, 0.2);
+  }
+  .text-truncate-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;  
+    overflow: hidden;
+  }
   
