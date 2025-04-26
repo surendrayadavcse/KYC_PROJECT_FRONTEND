@@ -1,12 +1,12 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
 export const sendOtpThunk = createAsyncThunk(
   'otp/sendOtp',
   async ({ email, mobile }, thunkAPI) => {
     try {
       console.log(mobile, "i am from thunk");
-      await axios.get(`http://localhost:9999/api/getOTP/${email}?mobile=${mobile}`);
+      await axios.get(`${baseUrl}/getOTP/${email}?mobile=${mobile}`);
       return;
     } catch (err) {
       console.log(err.response?.data?.message || err.message, "Error log");
@@ -21,7 +21,7 @@ export const verifyOtpThunk = createAsyncThunk(
   'otp/verifyOtp',
   async ({ email, otp }, thunkAPI) => {
     try {
-      const res = await axios.post("http://localhost:9999/api/verifyOTP", { email, otp });
+      const res = await axios.post(`${baseUrl}/verifyOTP`, { email, otp });
       if (res.data.message === "OTP verified successfully") return true;
       else throw new Error("Invalid OTP");
     } catch (err) {
