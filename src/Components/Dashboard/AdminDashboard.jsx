@@ -15,6 +15,13 @@ const AdminDashboard = () => {
   const [filter, setFilter] = useState('All'); // All, Pending, Approved
   const [currentPage, setCurrentPage] = useState(1);
   const [iconPreview, setIconPreview] = useState(null);
+  const [kycStats, setKycStats] = useState({
+    totalUsers: 0,
+    newRegistrations: 0,
+    kycCompletedUsers: 0,
+    pendingUsers: 0
+  });
+  
 
   // const dispatch=useDispatch()
   const usersPerPage = 5;
@@ -83,8 +90,33 @@ const AdminDashboard = () => {
   const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
 
   const handlePageChange = (pageNum) => setCurrentPage(pageNum);
+  useEffect(() => {
+    dispatch(fetchAllServices());
   
- 
+    const fetchUsers = async () => {
+      try {
+        const response = await axios.get('http://localhost:9999/api/user/getallcustomers');
+
+        setUsers(response.data);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+  
+    const fetchStats = async () => {
+      try {
+        const res = await axios.get('http://localhost:9999/api/user/kycstatistics');
+        setKycStats(res.data);
+      } catch (err) {
+        console.error('Failed to fetch stats:', err);
+      }
+    };
+  
+    fetchUsers();
+    fetchStats();
+  }, [dispatch]);
+  
+
   return (
     <>
       {/* Navbar */}
@@ -98,23 +130,24 @@ const AdminDashboard = () => {
 
           {/* Stats Cards */}
           <div className="row text-center mb-4">
-            {[
-              { title: 'New Registrations', count: 2847, change: '+2.5%', icon: 'bi bi-person-plus', color: 'primary' },
-              { title: 'KYC Approved', count: 1923, change: '+4.2%', icon: 'bi bi-check-circle', color: 'success' },
-              { title: 'Pending KYC', count: 924, change: 'Waiting', icon: 'bi bi-clock', color: 'warning' },
-              { title: 'Total Users', count: 12847, change: 'Active', icon: 'bi bi-people', color: 'info' },
-            ].map((card, i) => (
-              <div key={i} className="col-md-3 mb-3">
-                <div className="card shadow-sm rounded-4 bg-white border-0">
-                  <div className="card-body">
-                    <i className={`${card.icon} fs-3 text-${card.color}`}></i>
-                    <h5 className="mt-2">{card.count}</h5>
-                    <p className="mb-0 small text-muted">{card.title}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+  {[
+    { title: 'New Registrations', count: kycStats.newRegistrations, icon: 'bi bi-person-plus', color: 'primary' },
+    { title: 'KYC Approved', count: kycStats.kycCompletedUsers, icon: 'bi bi-check-circle', color: 'success' },
+    { title: 'Pending KYC', count: kycStats.pendingUsers, icon: 'bi bi-clock', color: 'warning' },
+    { title: 'Total Users', count: kycStats.totalUsers, icon: 'bi bi-people', color: 'info' },
+  ].map((card, i) => (
+    <div key={i} className="col-md-3 mb-3">
+      <div className="card shadow-sm rounded-4 bg-white border-0">
+        <div className="card-body">
+          <i className={`${card.icon} fs-3 text-${card.color}`}></i>
+          <h5 className="mt-2">{card.count}</h5>
+          <p className="mb-0 small text-muted">{card.title}</p>
+        </div>
+      </div>
+    </div>
+  ))}
+</div>
+
 
           {/* Tabs */}
           <ul className="nav nav-pills mb-3">
@@ -143,20 +176,21 @@ const AdminDashboard = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {currentUsers.map((user) => (
-                    <tr key={user.id}>
-                      <td>123</td>
-                      <td>{user.fullName}</td>
-                      <td>{user.email}</td>
-                      <td>29/09/2001</td>
-                      <td>
-                        <span className={`badge bg-${user.kycStatus === 'KYC COMPLETED' ? 'success' : 'warning'}`}>
-                          {user.kycStatus}
-                        </span>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
+  {currentUsers.map((user, index) => (
+    <tr key={index}>
+      <td>{index + 1}</td>
+      <td>{user.fullName}</td>
+      <td>{user.email}</td>
+      <td>{user.registereddate}</td>
+      <td>
+        <span className={`badge bg-${user.kycStatus === 'KYC COMPLETED' ? 'success' : 'warning'}`}>
+          {user.kycStatus}
+        </span>
+      </td>
+    </tr>
+  ))}
+</tbody>
+
               </table>
             </div>
           </div>

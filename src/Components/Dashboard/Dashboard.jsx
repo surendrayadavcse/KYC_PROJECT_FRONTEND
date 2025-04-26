@@ -7,7 +7,7 @@ import { BsLockFill } from "react-icons/bs"; // Lock icon
 import { FiShield } from "react-icons/fi";
 import { BsFillLockFill } from "react-icons/bs";
 import ConsentForm from "../Consent/ConsentForm"
-
+import "./Dashboard.css" 
 const Dashboard = () => {
   const Kycstatus = localStorage.getItem("kycstatus");
   const { list: services } = useSelector((state) => state.services);
@@ -91,7 +91,8 @@ const Dashboard = () => {
         <div className="row g-4">
           {services.map((item, index) => (
             <div className="col-lg-3 col-md-6 col-sm-12" key={index}>
-              <div className="card shadow-lg border-0 p-3  position-relative h-100">
+             <div className="card service-card shadow-sm border-0 p-3 position-relative h-100 rounded-4">
+
                 {/* Lock icon if KYC not completed */}
                 {Kycstatus !== "KYC COMPLETED" && (
                   <BsLockFill
@@ -117,11 +118,15 @@ const Dashboard = () => {
                 <h6 className="fw-bold text-dark mb-1">{item.serviceName}</h6>
 
                 {/* Description */}
-                <p className="text-muted small mb-0">
+                <p className="text-muted small mb-0 text-truncate-2">
                   {Kycstatus === "KYC COMPLETED"
                     ? item.serviceDetails
                     : "Complete KYC to access"}
                 </p>
+                {Kycstatus === "KYC COMPLETED"? <button className="btn btn-outline-primary btn-sm mt-3 w-100 apply-btn">
+  Apply
+</button>:""}
+
               </div>
             </div>
           ))}

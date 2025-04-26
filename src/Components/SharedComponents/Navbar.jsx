@@ -58,7 +58,7 @@ function Navbar() {
             }}
           >
             <img
-              src="https://i.pravatar.cc/30"
+              src="https://avatar.iran.liara.run/public"
               alt="Profile"
               className="rounded-circle me-2"
               width="30"
