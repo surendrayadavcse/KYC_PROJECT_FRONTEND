@@ -1,0 +1,31 @@
+/* Default styles for small screens */
+.sidebar {
+    background: blue;
+    position: relative;
+    height: 25%; /* Ensure it fills the full height */
+    width: 100%; /* Default width for small screens */
+    padding: 1rem; /* Adjust as necessary */
+  }
+  
+  .content {
+    background-color: rgb(255, 255, 255);
+    width: 100%;
+    padding: 1rem; /* Adjust as necessary */
+  }
+  
+  /* Styles for large screens */
+  @media (min-width: 992px) {
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 35%; /* Adjust the width for large screens */
+      height: 100vh;
+      z-index: 1000;
+    }
+  
+    .content {
+      margin-left: 35%; /* Shift content to the right so it doesn't overlap */
+    }
+  }
+  

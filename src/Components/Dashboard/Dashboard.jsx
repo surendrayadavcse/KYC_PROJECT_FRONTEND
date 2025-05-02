@@ -1,31 +1,105 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-// import Navbar from "../SharedComponents/Navbar";
+import axios from "axios";
 import { fetchAllServices } from "../../Redux/serviceSlice";
-import { BsLockFill } from "react-icons/bs"; // Lock icon
+import { BsLockFill, BsFillLockFill } from "react-icons/bs";
 import { FiShield } from "react-icons/fi";
-import { BsFillLockFill } from "react-icons/bs";
-import ConsentForm from "../Consent/ConsentForm"
-import "./Dashboard.css" 
+import ConsentForm from "../Consent/ConsentForm";
+import { motion } from "framer-motion";
+import { useKyc } from "../../context/KycContext"; // << use your KYC context
+import "./Dashboard.css";
+
+const baseUrl = import.meta.env.VITE_API_BASE_URL;
+
 const Dashboard = () => {
-  const Kycstatus = localStorage.getItem("kycstatus");
+  const userId = localStorage.getItem("id");
   const { list: services } = useSelector((state) => state.services);
   const dispatch = useDispatch();
-  const [showConsentModal, setShowConsentModal] = useState(false); // State for modal visibility
-
+  const navigate = useNavigate();
+  
+  const { kycStatus, fetchKycStatus } = useKyc(); 
+  useEffect(()=>{
+    fetchKycStatus()
+  },[])
+  console.log(kycStatus,"from dashboard")  
+  // << Get KYC Status from Context
+  const [showConsentModal, setShowConsentModal] = useState(false);
+  const [showNavigatingAnimation, setShowNavigatingAnimation] = useState(false);
   useEffect(() => {
-    dispatch(fetchAllServices());
-  }, [dispatch]);
+    if (services.length === 0) {
+      dispatch(fetchAllServices());
+    }
+    if (!kycStatus) {
+      fetchKycStatus();
+    }
+  }, [dispatch, fetchKycStatus, kycStatus, services.length]);
+  
 
-  const handleStartKYC = () => {
-    setShowConsentModal(true); // Open the consent modal when button is clicked
+  const getNextKycStep = () => {
+    if (kycStatus === "STEP 1 COMPLETED") {
+      return "/uploaddocuments";
+    } else if (kycStatus === "STEP 2 COMPLETED") {
+      return "/uploadselfie";
+    } else {
+      return "/basicdetails";
+    }
+  };
+
+  const handleStartKYC = async () => {
+    try {
+      const response = await axios.get(`${baseUrl}/consent/status/${userId}`);
+      const { consentGiven } = response.data;
+
+      if (consentGiven) {
+        setShowNavigatingAnimation(true);
+
+        setTimeout(() => {
+          const nextStep = getNextKycStep();
+          navigate(nextStep);
+        }, 2000);
+      } else {
+        setShowConsentModal(true);
+      }
+    } catch (error) {
+      console.error("Error fetching consent status", error);
+      if (error.response && error.response.status === 404) {
+        setShowConsentModal(true);
+      } else {
+        alert("Something went wrong! Please try again later.");
+      }
+    }
   };
 
   return (
     <>
-      <div className="container mt-4 ">
-        {Kycstatus === "KYC COMPLETED" && (
+      {/* Loading Animation */}
+      {showNavigatingAnimation && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 1 }}
+          className="position-fixed top-0 start-0 w-100 h-100 d-flex flex-column justify-content-center align-items-center bg-white"
+          style={{ zIndex: 9999 }}
+        >
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1.2 }}
+            transition={{ duration: 0.8, yoyo: Infinity }}
+            className="text-center"
+          >
+            <h2 className="fw-bold text-primary mb-3">Getting things ready...</h2>
+            <div className="spinner-border text-primary" role="status">
+              <span className="visually-hidden">Loading...</span>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+
+      <div className="container mt-4">
+        {/* KYC Status Completed */}
+        {kycStatus === "KYC COMPLETED" && (
           <div className="alert alert-success d-flex align-items-center p-4 mb-4 rounded shadow">
             <div className="me-3">
               <svg
@@ -36,9 +110,7 @@ const Dashboard = () => {
                 className="bi bi-check-circle-fill"
                 viewBox="0 0 16 16"
               >
-                <path
-                  d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM6.97 10.03a.75.75 0 0 0 1.07 0l3.992-3.992a.75.75 0 1 0-1.06-1.06L7.5 8.439 5.53 6.47a.75.75 0 1 0-1.06 1.06l2.5 2.5z"
-                />
+                <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM6.97 10.03a.75.75 0 0 0 1.07 0l3.992-3.992a.75.75 0 1 0-1.06-1.06L7.5 8.439 5.53 6.47a.75.75 0 1 0-1.06 1.06l2.5 2.5z" />
               </svg>
             </div>
             <div>
@@ -50,7 +122,8 @@ const Dashboard = () => {
           </div>
         )}
 
-        {Kycstatus !== "KYC COMPLETED" && (
+        {/* KYC Pending */}
+        {kycStatus !== "KYC COMPLETED" && (
           <div className="d-flex justify-content-between align-items-center p-4 mb-4 rounded shadow-sm bg-white border">
             <div>
               <h5 className="text-primary fw-bold mb-2">Action Required</h5>
@@ -62,13 +135,13 @@ const Dashboard = () => {
               </button>
             </div>
 
-            {/* Shield with Lock */}
+            {/* Shield Icon */}
             <div
               className="d-flex justify-content-center align-items-center rounded"
               style={{
                 width: "100px",
                 height: "100px",
-                backgroundColor: "#0d47a1", // dark blue
+                backgroundColor: "#0d47a1",
                 position: "relative",
               }}
             >
@@ -86,15 +159,15 @@ const Dashboard = () => {
           </div>
         )}
 
+        {/* Services */}
         <h4 className="fw-bold mb-4">Our Services</h4>
 
         <div className="row g-4">
           {services.map((item, index) => (
             <div className="col-lg-3 col-md-6 col-sm-12" key={index}>
-             <div className="card service-card shadow-sm border-0 p-3 position-relative h-100 rounded-4">
-
+              <div className="card service-card shadow-sm border-0 p-3 position-relative h-100 rounded-4">
                 {/* Lock icon if KYC not completed */}
-                {Kycstatus !== "KYC COMPLETED" && (
+                {kycStatus !== "KYC COMPLETED" && (
                   <BsLockFill
                     className="position-absolute"
                     style={{
@@ -106,7 +179,6 @@ const Dashboard = () => {
                   />
                 )}
 
-                {/* Service Icon */}
                 <img
                   src={item.serviceIconPath}
                   alt={item.serviceName}
@@ -114,28 +186,32 @@ const Dashboard = () => {
                   style={{ width: "45px", height: "40px" }}
                 />
 
-                {/* Service Name */}
                 <h6 className="fw-bold text-dark mb-1">{item.serviceName}</h6>
 
-                {/* Description */}
                 <p className="text-muted small mb-0 text-truncate-2">
-                  {Kycstatus === "KYC COMPLETED"
+                  {kycStatus === "KYC COMPLETED"
                     ? item.serviceDetails
                     : "Complete KYC to access"}
                 </p>
-                {Kycstatus === "KYC COMPLETED"? <button className="btn btn-outline-primary btn-sm mt-3 w-100 apply-btn">
-  Apply
-</button>:""}
 
+                {kycStatus === "KYC COMPLETED" && (
+                  <button className="btn btn-outline-primary btn-sm mt-3 w-100 apply-btn">
+                    Apply
+                  </button>
+                )}
               </div>
             </div>
           ))}
         </div>
       </div>
 
-      {/* Conditionally render the ConsentForm modal */}
-      {showConsentModal && <ConsentForm isOpen={showConsentModal} onClose={() => setShowConsentModal(false)} />}
-
+      {/* Consent Modal */}
+      {showConsentModal && (
+        <ConsentForm
+          isOpen={showConsentModal}
+          onClose={() => setShowConsentModal(false)}
+        />
+      )}
     </>
   );
 };

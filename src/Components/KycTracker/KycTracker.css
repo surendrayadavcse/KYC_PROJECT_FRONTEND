@@ -1,0 +1,122 @@
+/* KycTracker.css */
+
+.kyc-tracker-container {
+  min-height: 100vh;
+  background-color: #0000ff;
+}
+
+.kyc-steps {
+  position: relative;
+  width: 250px;
+}
+
+.kyc-line {
+  position: absolute;
+  left: 25px;
+  top: 0;
+  height: 100%;
+  width: 2px;
+  background-color: rgba(255, 255, 255, 0.5);
+  z-index: 0;
+}
+
+.kyc-step {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  margin-bottom: 50px;
+  animation: fadeInUp 0.6s ease forwards;
+  opacity: 0;
+}
+
+.kyc-step:nth-child(1) {
+  animation-delay: 0.1s;
+}
+.kyc-step:nth-child(2) {
+  animation-delay: 0.3s;
+}
+.kyc-step:nth-child(3) {
+  animation-delay: 0.5s;
+}
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.kyc-icon-wrapper {
+  width: 50px;
+  height: 50px;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  cursor: pointer;
+}
+
+.kyc-icon-wrapper.completed {
+  background-color: #4caf50;
+}
+.kyc-icon-wrapper.in-progress {
+  background-color: #ffc107;
+}
+.kyc-icon-wrapper.pending {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.kyc-step-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.kyc-step-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: white;
+}
+
+.kyc-step-status {
+  font-size: 14px;
+  margin-top: 4px;
+}
+
+.kyc-step-status.completed {
+  color: #c8e6c9;
+}
+.kyc-step-status.in-progress {
+  color: #ffe082;
+}
+.kyc-step-status.pending {
+  color: #bbdefb;
+}
+
+/* Tooltip styling */
+.tooltip {
+  position: absolute;
+  bottom: 110%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #222;
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.kyc-icon-wrapper:hover .tooltip {
+  opacity: 1;
+}

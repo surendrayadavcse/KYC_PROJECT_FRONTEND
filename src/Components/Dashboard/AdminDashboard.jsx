@@ -32,7 +32,7 @@ const AdminDashboard = () => {
 
     const fetchUsers = async () => {
       try {
-        const response = await axios.get('http://localhost:9999/auth/customers');
+        const response = await axios.get('http://localhost:9999/api/user/customers');
         setUsers(response.data);
       } catch (err) {
         console.error(err);
