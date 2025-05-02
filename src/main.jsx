@@ -7,10 +7,15 @@ import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import "./index.css"
+
+import 'bootstrap/dist/js/bootstrap.bundle.min.js'; 
+import { KycProvider } from "./context/KycContext";
 ReactDOM.createRoot(document.getElementById("root")).render(
   <Provider store={store}>
     <div className="bgcolr">
+      <KycProvider>
     <App />
+    </KycProvider>
     </div>
   </Provider>
 );

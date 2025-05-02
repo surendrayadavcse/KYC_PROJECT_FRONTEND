@@ -21,7 +21,7 @@ const ConsentForm = ({ isOpen, onClose }) => {
 
   const handleConsentSubmit = async () => {
     setLoading(true);
-    const userId = "1";  // Replace with dynamic user ID, if applicable
+    const userId = localStorage.getItem("id")  // Replace with dynamic user ID, if applicable
 
     const consentRequestDTO = {
       userId: userId,
@@ -31,7 +31,8 @@ const ConsentForm = ({ isOpen, onClose }) => {
     try {
       const response = await axios.post(`${baseUrl}/consent/submit`, consentRequestDTO);
       console.log('Consent submitted:', response.data);
-      navigate('/register'); // Redirect after consent submission
+      localStorage.setItem("consentGiven","true")
+      navigate('/basicdetails'); // Redirect after consent submission
     } catch (error) {
       console.error('Error submitting consent:', error);
     } finally {

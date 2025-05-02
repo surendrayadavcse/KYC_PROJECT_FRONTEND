@@ -1,0 +1,23 @@
+.landing-page {
+    background: linear-gradient(135deg, #fcfcfc 0%, #f5f3f3 100%);
+    min-height: 100vh;
+  }
+  
+  .feature-card:hover {
+    background-color: #f8f9fa;
+    cursor: pointer;
+  }
+  
+  .step-card {
+    background: #fff;
+    color: #2563eb;
+    min-height: 220px;
+    cursor: pointer;
+    transition: background 0.3s, color 0.3s;
+  }
+  
+  .step-card:hover {
+    background: #2563eb;
+    color: #fff;
+  }
+  

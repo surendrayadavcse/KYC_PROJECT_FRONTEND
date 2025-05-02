@@ -1,0 +1,73 @@
+.document-upload-container {
+    min-height: 100vh;
+    background-color: #ffffff;
+  }
+  
+  .document-upload-card {
+    background: rgb(255, 255, 255);
+    border-radius: 10px;
+    width: 100%;
+    max-width: 600px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .upload-box {
+    border: 2px dashed #00A9FF;
+    background-color: #faf5f5;
+    border-radius: 8px;
+    min-height: 220px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .upload-icon {
+    color: #00A9FF;
+  }
+  
+  .upload-text {
+    font-weight: bold;
+    margin-top: 10px;
+  }
+  
+  .upload-subtext {
+    font-size: 0.8rem;
+    color: #6c757d;
+  }
+  
+  .upload-preview {
+    max-height: 180px;
+    object-fit: contain;
+    border-radius: 8px;
+  }
+  
+  .upload-remove {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    color: red;
+    font-size: 24px;
+    cursor: pointer;
+  }
+  .modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1050;
+  }
+  
+  .modal-content {
+    max-width: 400px;
+    width: 90%;
+  }
+  

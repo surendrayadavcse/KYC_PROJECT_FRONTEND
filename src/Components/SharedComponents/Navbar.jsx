@@ -1,27 +1,36 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { logout } from '../../Redux/userSlice';
 import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { IoMdArrowDropdown, IoMdLogOut } from "react-icons/io";
 
 function Navbar() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [selected, setSelected] = useState(false);
+  const location = useLocation();
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [selected, setSelected] = useState(false);
+
+  useEffect(() => {
+    // Set selected true when at /profile, false otherwise
+    if (location.pathname === "/profile") {
+      setSelected(true);
+    } else {
+      setSelected(false);
+    }
+  }, [location.pathname]);
 
   const handleLogout = () => {
     dispatch(logout());
     navigate('/login');
   };
 
-  const handleProfile = () => {
-    navigate("/profile");
-  };
-
-  const toggleSelect = () => {
-    setSelected(!selected);
-    setDropdownOpen(false);
+  const handleProfileToggle = () => {
+    if (selected) {
+      navigate("/dashboard");
+    } else {
+      navigate("/profile");
+    }
   };
 
   const toggleDropdown = (e) => {
@@ -45,10 +54,10 @@ function Navbar() {
           </span>
         </div>
 
-        {/* Right: Profile with Dropdown */}
+        {/* Right: Profile Button */}
         <div className="d-flex align-items-center ms-auto position-relative">
           <button
-            onClick={toggleSelect}
+            onClick={handleProfileToggle}
             className="d-flex align-items-center rounded-pill px-3 py-2 border-1"
             style={{
               backgroundColor: selected ? '#007BFF' : 'white',
@@ -63,7 +72,6 @@ function Navbar() {
               className="rounded-circle me-2"
               width="30"
               height="30"
-              onClick={handleProfile}
               style={{ cursor: 'pointer' }}
             />
             <div className="text-start me-2">

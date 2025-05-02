@@ -39,7 +39,7 @@ const Register = () => {
     mobile: Yup.string()
       .matches(/^[0-9]{10}$/, "Mobile must be 10 digits")
       .required("Mobile number is required"),
-    password: Yup.string().min(6, "Password must be at least 6 characters").required("Password is required"),
+    password: Yup.string().min(8, "Password must be at least 8 characters").required("Password is required"),
   });
 
   const requestOtp = async (values) => {
@@ -150,29 +150,42 @@ const Register = () => {
             validationSchema={validationSchema}
             onSubmit={handleSubmit}
           >
-            {({ values }) => (
+            {({ values,setFieldValue }) => (
               <Form>
                 <div className="mb-3">
                   <label className="form-label"><b>Full Name</b></label>
                   <Field
-                    type="text"
-                    name="fullName"
-                    className="form-control"
-                    placeholder="Enter your full name"
-                    readOnly={otpVerified}
-                  />
+  type="text"
+  name="fullName"
+  className="form-control"
+  placeholder="Enter your full name"
+  readOnly={otpVerified}
+  onChange={(e) => {
+    const onlyChars = e.target.value.replace(/[^A-Za-z\s]/g, '');
+    setFieldValue('fullName', onlyChars);
+  }}
+/>
+
                   <div className="text-danger small"><ErrorMessage name="fullName" /></div>
                 </div>
 
                 <div className="mb-3">
                   <label className="form-label"><b>Mobile Number </b></label>
                   <Field
-                    type="text"
-                    name="mobile"
-                    className="form-control"
-                    placeholder="+91 8247380327"
-                    readOnly={otpVerified}
-                  />
+  type="text"
+  name="mobile"
+  className="form-control"
+  placeholder="+91 8247380327"
+  readOnly={otpVerified}
+  onChange={(e) => {
+    let onlyNums = e.target.value.replace(/\D/g, '');
+    if (onlyNums.length > 10) {
+      onlyNums = onlyNums.slice(0, 10);
+    }
+    setFieldValue('mobile', onlyNums);
+  }}
+/>
+
                   <div className="text-danger small"><ErrorMessage name="mobile" /></div>
                 </div>
 
