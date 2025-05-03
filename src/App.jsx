@@ -43,7 +43,7 @@ function AppWrapper() {
         <Route
           path="/basicdetails"
           element={
-            <ProtectedRoute allowedStatuses={["PENDING", "STEP 1 COMPLETED", "STEP 2 COMPLETED", "KYC COMPLETED"]}>
+            <ProtectedRoute allowedRoles={["CUSTOMER"]} allowedStatuses={["PENDING", "STEP 1 COMPLETED", "STEP 2 COMPLETED", "KYC COMPLETED"]}>
               <BasicDetails />
             </ProtectedRoute>
           }
@@ -51,7 +51,7 @@ function AppWrapper() {
         <Route
           path="/uploaddocuments"
           element={
-            <ProtectedRoute allowedStatuses={["STEP 1 COMPLETED", "STEP 2 COMPLETED", "KYC COMPLETED"]}>
+            <ProtectedRoute allowedRoles={["CUSTOMER"]} allowedStatuses={["STEP 1 COMPLETED", "STEP 2 COMPLETED", "KYC COMPLETED"]}>
               <DocumentsUpload />
             </ProtectedRoute>
           }
@@ -59,7 +59,7 @@ function AppWrapper() {
         <Route
           path="/uploadselfie"
           element={
-            <ProtectedRoute allowedStatuses={["STEP 2 COMPLETED", "KYC COMPLETED"]}>
+            <ProtectedRoute allowedRoles={["CUSTOMER"]} allowedStatuses={["STEP 2 COMPLETED", "KYC COMPLETED"]}>
               <Selfie />
             </ProtectedRoute>
           }
@@ -67,19 +67,23 @@ function AppWrapper() {
         <Route
           path="/dashboard"
           element={
-            <ProtectedRoute allowedStatuses={["PENDING", "STEP 1 COMPLETED", "STEP 2 COMPLETED", "KYC COMPLETED"]}>
+            <ProtectedRoute allowedRoles={["CUSTOMER"]} allowedStatuses={["PENDING", "STEP 1 COMPLETED", "STEP 2 COMPLETED", "KYC COMPLETED"]}>
               <Dashboard />
             </ProtectedRoute>
           }
         />
-        <Route
-          path="/admindashboard"
-          element={
-            <ProtectedRoute allowedStatuses={["PENDING", "STEP 1 COMPLETED", "STEP 2 COMPLETED", "KYC COMPLETED"]}>
-              <AdminDashboard />
-            </ProtectedRoute>
-          }
-        />
+     <Route
+  path="/admindashboard"
+  element={
+    <ProtectedRoute
+      allowedStatuses={["PENDING", "STEP 1 COMPLETED", "STEP 2 COMPLETED", "KYC COMPLETED"]}
+      allowedRoles={["ADMIN"]} // ✅ Restrict to ADMIN role
+    >
+      <AdminDashboard />
+    </ProtectedRoute>
+  }
+/>
+
         <Route
           path="/profile"
           element={
@@ -90,7 +94,7 @@ function AppWrapper() {
         />
       </Routes>
 
-      <ToastContainer position="top-right" autoClose={2000} />
+      <ToastContainer position="middle" autoClose={2000} />
     </>
   );
 }

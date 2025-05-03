@@ -4,7 +4,10 @@ import { loginUser } from "../../authentication/userThunks";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+import { useKyc } from "../../context/KycContext"; 
 const Login = () => {
+  const { refreshKycStatus } = useKyc(); 
   const [loginData, setLoginData] = useState({ email: "", password: "" });
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -14,11 +17,13 @@ const Login = () => {
     setLoginData({ ...loginData, [e.target.name]: e.target.value });
   };
 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       await dispatch(loginUser(loginData)).unwrap();
       toast.success("Login successful!");
+      refreshKycStatus();
       const role=localStorage.getItem("role")
       if(role=="ADMIN"){navigate("/admindashboard")}else{
         navigate("/dashboard")
@@ -30,8 +35,23 @@ const Login = () => {
   };
 
   return (
-    <>
-          <ToastContainer position="top-right" autoClose={3000} />
+    <>  
+
+<ToastContainer
+        position="top-center" // Custom position
+        autoClose={3000} // Toast duration
+        closeOnClick // Close the toast when clicked
+        pauseOnHover // Pause toast when hovered over
+        hideProgressBar // Hide the progress bar
+        newestOnTop
+        toastStyle={{
+          background: '#333', // Background color
+          color: '#fff', // Text color
+          borderRadius: '8px', // Rounded corners
+          padding: '12px 20px', // Padding for better spacing
+          fontSize: '16px', // Optional: font size to match your design
+        }}
+      />
     <div className="container-fluid bg-light d-flex align-items-center justify-content-center ">
       <div className="row bg-white shadow rounded-4 w-100 p-5 min-vh-100" style={{  height: "auto" }}>
         {/* Left Side - Login Form */}

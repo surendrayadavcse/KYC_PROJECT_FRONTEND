@@ -3,7 +3,7 @@ import { FaceDetection } from '@mediapipe/face_detection';
 import { Camera } from '@mediapipe/camera_utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import axios from '../../../utils';
 import KycLayout from '../Shared/KycLayout';
 import { useKyc } from '../../../context/KycContext';
 
@@ -13,19 +13,22 @@ function Selfie() {
   const { setKycStatus } = useKyc();
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
+  const [cameraStarted, setCameraStarted] = useState(false);
 
   const [imageSrc, setImageSrc] = useState(null);
   const [aiMessage, setAiMessage] = useState('');
   const [aiPassed, setAiPassed] = useState(false);
   const [uploadStatus, setUploadStatus] = useState('');
+  const [isSelfieCaptured, setIsSelfieCaptured] = useState(false);
+  const [isSelfieSubmitted, setIsSelfieSubmitted] = useState(false);
   const navigate = useNavigate();
   const userId = localStorage.getItem('id');
 
-  let faceDetection = null;
-  let camera = null;
+  const cameraRef = useRef(null);
+  const faceDetectionRef = useRef(null);
 
   useEffect(() => {
-    faceDetection = new FaceDetection({
+    const faceDetection = new FaceDetection({
       locateFile: (file) =>
         `https://cdn.jsdelivr.net/npm/@mediapipe/face_detection/${file}`,
     });
@@ -36,35 +39,31 @@ function Selfie() {
     });
 
     faceDetection.onResults(onResults);
+    faceDetectionRef.current = faceDetection;
 
-    camera = new Camera(videoRef.current, {
-      onFrame: async () => {
-        if (videoRef.current) {
-          await faceDetection.send({ image: videoRef.current });
-        }
-      },
-      width: 480,
-      height: 360,
-    });
-
-    camera.start();
+    if (!isSelfieCaptured) {
+      const camera = new Camera(videoRef.current, {
+        onFrame: async () => {
+          if (videoRef.current && faceDetectionRef.current) {
+            await faceDetectionRef.current.send({ image: videoRef.current });
+          }
+        },
+        width: 480,
+        height: 360,
+      });
+      camera.start();
+      cameraRef.current = camera;
+    }
 
     return () => {
-      if (camera) {
-        camera.stop();
-      }
+      cameraRef.current?.stop();
     };
-  }, []);
+  }, [isSelfieCaptured]);
 
   const onResults = (results) => {
     const canvasCtx = canvasRef.current.getContext('2d');
     canvasCtx.save();
-    canvasCtx.clearRect(
-      0,
-      0,
-      canvasRef.current.width,
-      canvasRef.current.height
-    );
+    canvasCtx.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
     canvasCtx.drawImage(
       results.image,
       0,
@@ -94,9 +93,8 @@ function Selfie() {
     ctx.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
     setImageSrc(canvas.toDataURL('image/png'));
 
-    if (camera) {
-      camera.stop();
-    }
+    cameraRef.current?.stop();
+    setIsSelfieCaptured(true);
   };
 
   const reset = () => {
@@ -104,12 +102,41 @@ function Selfie() {
     setAiMessage('');
     setAiPassed(false);
     setUploadStatus('');
+    setIsSelfieCaptured(false);
+    setIsSelfieSubmitted(false);
 
-    if (camera) {
-      camera.stop();
-      camera.start();
-    }
+    // Restart camera
+    const camera = new Camera(videoRef.current, {
+      onFrame: async () => {
+        if (videoRef.current && faceDetectionRef.current) {
+          await faceDetectionRef.current.send({ image: videoRef.current });
+        }
+      },
+      width: 480,
+      height: 360,
+    });
+    camera.start();
+    cameraRef.current = camera;
   };
+
+  useEffect(() => {
+    const fetchSelfie = async () => {
+      try {
+        const res = await axios.get(`/kyc/selfie/${userId}`);
+        if (res.data && res.data.includes('selfie')) {
+          setImageSrc(res.data);
+          setAiPassed(true);
+          setUploadStatus('Selfie already uploaded');
+          setIsSelfieCaptured(true);
+          setIsSelfieSubmitted(true);
+        }
+      } catch (error) {
+        console.log('No existing selfie found:', error?.response?.data || error.message);
+      }
+    };
+
+    fetchSelfie();
+  }, [userId]);
 
   const submitSelfie = async () => {
     const blob = await (await fetch(imageSrc)).blob();
@@ -118,22 +145,22 @@ function Selfie() {
     formData.append('file', blob, 'selfie.png');
 
     try {
-      const response = await axios.post(`${baseUrl}/kyc/uploadselfie`, formData, {
+      const response = await axios.post(`kyc/selfie`, formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
       setUploadStatus(response.data);
       setKycStatus('KYC COMPLETED');
+      setIsSelfieSubmitted(true);
     } catch (err) {
       setUploadStatus(err.response?.data || 'Upload failed');
     }
   };
 
-  const handleSubmitFinish = async () => {
-    if (!uploadStatus.includes('success')) {
+  const handleSubmitFinish = () => {
+    if (!isSelfieSubmitted) {
       alert('Please upload your selfie before finishing.');
       return;
     }
-
     setKycStatus('KYC COMPLETED');
     localStorage.setItem('kycStatus', 'KYC COMPLETED');
     navigate('/dashboard');
@@ -144,9 +171,7 @@ function Selfie() {
       <div className="container d-flex justify-content-center mt-4">
         <div className="card p-4 shadow" style={{ maxWidth: '500px', width: '100%' }}>
           <h4 className="mb-3">Upload Your Live Selfie</h4>
-          <p className="text-muted">
-            Please allow camera access to capture your selfie clearly.
-          </p>
+          <p className="text-muted">Please allow camera access to capture your selfie clearly.</p>
 
           <div
             className="d-flex align-items-center justify-content-center mb-4"
@@ -196,9 +221,7 @@ function Selfie() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -8 }}
                 className={`mb-3 px-3 py-2 rounded-3 fw-semibold small ${
-                  aiPassed
-                    ? 'text-success border border-success'
-                    : 'text-danger border border-danger'
+                  aiPassed ? 'text-success border border-success' : 'text-danger border border-danger'
                 }`}
                 style={{ backgroundColor: aiPassed ? '#e9f8f1' : '#fbe9e9' }}
               >
@@ -207,18 +230,24 @@ function Selfie() {
             )}
           </AnimatePresence>
 
-          {!imageSrc ? (
-            <button className="btn btn-primary w-100 mb-3" onClick={captureSelfie}>
-              📸 Capture Selfie
-            </button>
+          {!isSelfieSubmitted ? (
+            !imageSrc ? (
+              <button className="btn btn-primary w-100 mb-3" onClick={captureSelfie}>
+                📸 Capture Selfie
+              </button>
+            ) : (
+              <div className="d-flex gap-2 justify-content-center">
+                <button className="btn btn-success" onClick={submitSelfie} disabled={!aiPassed}>
+                  Use This Selfie
+                </button>
+                <button className="btn btn-outline-dark" onClick={reset}>
+                  Retake
+                </button>
+              </div>
+            )
           ) : (
-            <div className="d-flex gap-2 justify-content-center">
-              <button className="btn btn-success" onClick={submitSelfie} disabled={!aiPassed}>
-                Use This Selfie
-              </button>
-              <button className="btn btn-outline-dark" onClick={reset}>
-                Retake
-              </button>
+            <div className="text-center text-success mb-3">
+              Selfie successfully verified! ✅
             </div>
           )}
 
@@ -235,13 +264,13 @@ function Selfie() {
           )}
 
           <div className="mt-4 d-flex justify-content-between align-items-center">
-            <button className="btn btn-link p-0" onClick={() => window.history.back()}>
-              ← Back to Document Upload
+            <button className="btn btn-primary" onClick={() => navigate('/uploaddocuments')}>
+              Back to Document Upload
             </button>
             <button
               onClick={handleSubmitFinish}
               className="btn btn-primary"
-              disabled={!aiPassed || !imageSrc}
+              disabled={!isSelfieSubmitted}
             >
               Submit & Finish ➔
             </button>

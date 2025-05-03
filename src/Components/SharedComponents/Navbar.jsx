@@ -3,7 +3,7 @@ import { logout } from '../../Redux/userSlice';
 import { useDispatch } from 'react-redux';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { IoMdArrowDropdown, IoMdLogOut } from "react-icons/io";
-
+import { FaUserCircle } from 'react-icons/fa';
 function Navbar() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -11,6 +11,11 @@ function Navbar() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [selected, setSelected] = useState(false);
 
+const role = localStorage.getItem("role");
+const storedName = localStorage.getItem("name");
+const fullName = storedName ? storedName.trim() : "User";
+const lastName = fullName.split(" ").slice(-1)[0];
+// console.log(lastName,)
   useEffect(() => {
     // Set selected true when at /profile, false otherwise
     if (location.pathname === "/profile") {
@@ -27,11 +32,18 @@ function Navbar() {
 
   const handleProfileToggle = () => {
     if (selected) {
-      navigate("/dashboard");
+      // When unselecting profile
+      if (role === "ADMIN") {
+        navigate("/admindashboard");
+      } else {
+        navigate("/dashboard");
+      }
     } else {
+      // When selecting profile
       navigate("/profile");
     }
   };
+  
 
   const toggleDropdown = (e) => {
     e.stopPropagation();
@@ -61,23 +73,20 @@ function Navbar() {
             className="d-flex align-items-center rounded-pill px-3 py-2 border-1"
             style={{
               backgroundColor: selected ? '#007BFF' : 'white',
-              color: selected ? 'white' : 'black',
+              color: selected ? 'white' : 'blue',
               minWidth: '150px',
               border: '1px solid #dee2e6',
             }}
           >
-            <img
-              src="https://avatar.iran.liara.run/public"
-              alt="Profile"
-              className="rounded-circle me-2"
-              width="30"
-              height="30"
-              style={{ cursor: 'pointer' }}
-            />
-            <div className="text-start me-2">
-              <div className="fw-bold small">Karthick</div>
-              <div className="small" style={{ fontSize: '0.7rem' }}>Admin</div>
-            </div>
+           <FaUserCircle size={30} className="me-2 " style={{ cursor: 'pointer' }} />
+
+           <div className="text-start me-2">
+  <div className="fw-bold medium text-black">{lastName}</div>
+  {role === 'ADMIN' && (
+    <div className="small" style={{ fontSize: '0.7rem' }}>{role}</div>
+  )}
+</div>
+
 
             {/* Dropdown Icon */}
             <span onClick={toggleDropdown} style={{ cursor: 'pointer' }}>

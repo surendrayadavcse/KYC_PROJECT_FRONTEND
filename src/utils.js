@@ -7,7 +7,7 @@ const instance = axios.create({
 // Automatically attach JWT token to every request if available
 instance.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('jwt');
+    const token = localStorage.getItem('token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -17,9 +17,11 @@ instance.interceptors.request.use(
 );
 
 export default instance;
+export const getUserId = () => localStorage.getItem("id");
+
 export const baseUrl = import.meta.env.VITE_API_BASE_URL;
 
-export const getUserId = () => localStorage.getItem("id");
+
 
 
 

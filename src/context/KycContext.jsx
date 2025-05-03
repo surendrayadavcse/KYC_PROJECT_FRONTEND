@@ -12,10 +12,19 @@ export const KycProvider = ({ children }) => {
 
   useEffect(() => {
     const storedId = localStorage.getItem("id");
-    if (storedId !== userId) {
+    if (storedId && storedId !== userId) {
       setUserId(storedId);
+    } else if (storedId) {
+      fetchKycStatus(); // <- refetch if same ID but might be a fresh login
     }
   }, [userId]);
+  
+
+  const refreshKycStatus = () => {
+    const storedId = localStorage.getItem("id");
+    setUserId(storedId); // this will trigger fetch due to useEffect
+  };
+  
 
   const fetchKycStatus = async () => {
     if (!userId) return;
@@ -35,7 +44,8 @@ export const KycProvider = ({ children }) => {
   }, [userId]);
 
   return (
-    <KycContext.Provider value={{ kycStatus, setKycStatus, fetchKycStatus, isKycFetched }}>
+    <KycContext.Provider value={{ kycStatus, setKycStatus, fetchKycStatus, isKycFetched, refreshKycStatus }}>
+
       {children}
     </KycContext.Provider>
   );

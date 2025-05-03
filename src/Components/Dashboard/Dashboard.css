@@ -37,4 +37,50 @@
     -webkit-box-orient: vertical;  
     overflow: hidden;
   }
-  
+ 
+
+/* Glowing effect for current step */
+.glow-step {
+  animation: glowPulse 0.6s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+  0% {
+    text-shadow: 0 0 20px rgba(0, 123, 255, 0.7), 0 0 10px rgba(0, 123, 255, 0.5);
+    transform: scale(1);
+  }
+  50% {
+    text-shadow: 0 0 20px rgb(38, 97, 160), 0 0 20px rgba(0, 123, 255, 0.7);
+    transform: scale(1.05);
+  }
+  100% {
+    text-shadow: 0 0 10px rgba(0, 123, 255, 0.7), 0 0 10px rgba(0, 123, 255, 0.5);
+    transform: scale(1);
+  }
+}
+
+.kyc-verified-card {
+  border-left: 4px solid #34c38f; /* same green line */
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+}
+.icon-container {
+  background: #eafaf3;
+  border-radius: 50%;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.kyc-pending-card {
+  background: linear-gradient(to right, #e6f3ff, #7ea1cf); /* light blue fade */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.kyc-icon {
+  width: 90px;
+  height: 90px;
+  background-color: #e3f2fd; /* soft light blue background */
+}
+
+
