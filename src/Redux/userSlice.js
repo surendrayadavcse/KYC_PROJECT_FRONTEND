@@ -10,6 +10,7 @@ const initialState = {
   loading: false,
   error: null,
   kycstatus : null,
+  fullName:null
 };
 
 // const userslice2=createSlice()
@@ -26,6 +27,8 @@ const userSlice = createSlice({
       localStorage.removeItem("role");
       localStorage.removeItem("kycStatus")
       localStorage.removeItem("id")
+      localStorage.removeItem("token")
+      localStorage.removeItem("name")
       
     },
   },
@@ -58,10 +61,16 @@ const userSlice = createSlice({
         state.user = action.payload.user;
         state.token = action.payload.token;
         state.role = action.payload.role;
+        state.role=action.payload.fullName;
+
+        localStorage.setItem("token",action.payload.token)
         localStorage.setItem("role", action.payload.role);
         localStorage.setItem("kycStatus",action.payload.kycstatus)
+        localStorage.setItem("name",action.payload.fullName)
+        console.log(action.payload.fullName,"ajsdj")
         console.log(action.payload.kycstatus)
         localStorage.setItem("id",action.payload.id)
+
         // console.log(action.payload.role)
         
        

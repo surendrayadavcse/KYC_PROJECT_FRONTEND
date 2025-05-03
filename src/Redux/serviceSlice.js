@@ -1,12 +1,14 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
-
-const baseUrl = import.meta.env.VITE_API_BASE_URL;
+import axiosInstance from '../utils'; 
 
 // Async thunks
-export const fetchAllServices = createAsyncThunk('services/fetchAll', async () => {
-  const res = await axios.get(`${baseUrl}/services/all`);
-  return res.data;
+export const fetchAllServices = createAsyncThunk('services/fetchAll', async (_, { rejectWithValue }) => {
+  try {
+    const res = await axiosInstance.get('/services/all');
+    return res.data;
+  } catch (err) {
+    return rejectWithValue(err.response?.data || 'Error fetching services');
+  }
 });
 
 export const addService = createAsyncThunk(
@@ -20,7 +22,7 @@ export const addService = createAsyncThunk(
         formData.append('icon', iconFile);
       }
 
-      const res = await axios.post(`${baseUrl}/services/add`, formData, {
+      const res = await axiosInstance.post('/services/add', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
 

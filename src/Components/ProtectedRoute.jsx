@@ -2,21 +2,25 @@ import React from "react";
 import { Navigate } from "react-router-dom";
 import { useKyc } from "../context/KycContext";
 
-const ProtectedRoute = ({ allowedStatuses, children }) => {
+const ProtectedRoute = ({ allowedStatuses, allowedRoles = [], children }) => {
   const { kycStatus } = useKyc();
-  // console.log(kycStatus," ")
+
   const userId = localStorage.getItem("id");
+  const role = localStorage.getItem("role");
 
   if (!userId) return <Navigate to="/login" replace />;
+  if (!kycStatus) return <div>Loading...</div>;
 
-  if (!kycStatus) return <div>Loading...</div>; // or spinner
-
-  console.log(kycStatus, "i am from protected");
+  // ✅ Check role if allowedRoles is specified
+  if (allowedRoles.length > 0 && !allowedRoles.includes(role)) {
+    return <Navigate to="/dashboard" replace />;
+  }
 
   if (allowedStatuses.includes(kycStatus)) {
     return children;
   }
 
+  // Redirect based on KYC status
   switch (kycStatus) {
     case "PENDING":
       return <Navigate to="/basicdetails" replace />;

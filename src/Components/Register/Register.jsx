@@ -201,28 +201,30 @@ const Register = () => {
                     <div className="text-danger small"><ErrorMessage name="email" /></div>
                   </div>
 
-                  <button
-  type="button"
-  className="btn btn-primary d-flex align-items-center gap-2"
-  onClick={() => requestOtp(values)}
-  disabled={otpVerified || timer > 0 || otpLoading || !values.email || !values.mobile}
-  style={{
-    width: '120px',
-    height: '40px',
-  }}
->
-  {otpLoading ? (
-    <>
-      <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-      Sending...
-    </>
-  ) : (
-    <>
-      <i className="bi bi-send-fill"></i>
-      {otpVerified ? null : (timer > 0 ? `Resend in ${timer}s` : otpSent ? "Resend OTP" : "Send OTP")}
-    </>
-  )}
-</button>
+                  {!otpVerified && (
+  <button
+    type="button"
+    className="btn btn-primary d-flex align-items-center gap-2"
+    onClick={() => requestOtp(values)}
+    disabled={timer > 0 || otpLoading || !values.email || !values.mobile}
+    style={{
+      width: '120px',
+      height: '40px',
+    }}
+  >
+    {otpLoading ? (
+      <>
+        <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+        Sending...
+      </>
+    ) : (
+      <>
+        <i className="bi bi-send-fill"></i>
+        {timer > 0 ? `Resend in ${timer}s` : otpSent ? "Resend OTP" : "Send OTP"}
+      </>
+    )}
+  </button>
+)}
 
                 </div>
 

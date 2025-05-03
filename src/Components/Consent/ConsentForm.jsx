@@ -1,27 +1,24 @@
+// ConsentForm.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import DataUsage from './DataUsage';
-import axios from 'axios';
+import axios from '../../utils'; // ✅ Use custom instance
 const baseUrl = import.meta.env.VITE_API_BASE_URL;
+
 const ConsentForm = ({ isOpen, onClose }) => {
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [isDataUsageModalOpen, setIsDataUsageModalOpen] = useState(false);
-  const [loading, setLoading] = useState(false);  // To manage the loading state
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  if (!isOpen) return null; // Don't render modal if not open
+  if (!isOpen) return null;
 
-  const openDataUsageModal = () => {
-    setIsDataUsageModalOpen(true); // Open Data Usage modal
-  };
-
-  const closeDataUsageModal = () => {
-    setIsDataUsageModalOpen(false); // Close Data Usage modal
-  };
+  const openDataUsageModal = () => setIsDataUsageModalOpen(true);
+  const closeDataUsageModal = () => setIsDataUsageModalOpen(false);
 
   const handleConsentSubmit = async () => {
     setLoading(true);
-    const userId = localStorage.getItem("id")  // Replace with dynamic user ID, if applicable
+    const userId = localStorage.getItem("id");
 
     const consentRequestDTO = {
       userId: userId,
@@ -29,10 +26,10 @@ const ConsentForm = ({ isOpen, onClose }) => {
     };
 
     try {
-      const response = await axios.post(`${baseUrl}/consent/submit`, consentRequestDTO);
+      const response = await axios.post(`/consent/submit`, consentRequestDTO);
       console.log('Consent submitted:', response.data);
-      localStorage.setItem("consentGiven","true")
-      navigate('/basicdetails'); // Redirect after consent submission
+      localStorage.setItem("consentGiven", "true");
+      navigate('/basicdetails');
     } catch (error) {
       console.error('Error submitting consent:', error);
     } finally {
@@ -42,6 +39,7 @@ const ConsentForm = ({ isOpen, onClose }) => {
 
   return (
     <>
+      {/* Modal JSX */}
       <div
         className={`modal fade show d-block ${isOpen ? 'show' : ''}`}
         tabIndex="-1"
@@ -56,13 +54,7 @@ const ConsentForm = ({ isOpen, onClose }) => {
                 <i className="bi bi-shield-lock me-2 text-primary"></i>
                 Before You Begin
               </h5>
-              <button
-                type="button"
-                className="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-                onClick={onClose}
-              ></button>
+              <button type="button" className="btn-close" aria-label="Close" onClick={onClose}></button>
             </div>
 
             <div className="modal-body">
@@ -76,7 +68,7 @@ const ConsentForm = ({ isOpen, onClose }) => {
                   <span
                     className="text-primary cursor-pointer"
                     style={{ fontWeight: 500 }}
-                    onClick={openDataUsageModal} // Open the Data Usage modal here
+                    onClick={openDataUsageModal}
                   >
                     Learn how we use your data
                   </span>
@@ -101,17 +93,11 @@ const ConsentForm = ({ isOpen, onClose }) => {
             </div>
 
             <div className="modal-footer">
-              <button
-                className="btn btn-secondary"
-                data-bs-dismiss="modal"
-                onClick={onClose}
-              >
-                Close
-              </button>
+              <button className="btn btn-secondary" onClick={onClose}>Close</button>
               <button
                 className="btn btn-primary"
-                onClick={handleConsentSubmit} // Submit consent here
-                disabled={!agreedToTerms || loading} // Disable button if not agreed or if loading
+                onClick={handleConsentSubmit}
+                disabled={!agreedToTerms || loading}
               >
                 {loading ? 'Submitting...' : 'Continue to KYC'}
                 <i className="bi bi-arrow-right ms-2"></i>
@@ -121,7 +107,7 @@ const ConsentForm = ({ isOpen, onClose }) => {
         </div>
       </div>
 
-      {/* Include the DataUsage Modal */}
+      {/* Data Usage Modal */}
       <DataUsage isOpen={isDataUsageModalOpen} onClose={closeDataUsageModal} />
     </>
   );

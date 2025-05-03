@@ -70,4 +70,10 @@
     max-width: 400px;
     width: 90%;
   }
+  .upload-preview-pdf {
+    width: 100%;
+    height: 300px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+  }
   

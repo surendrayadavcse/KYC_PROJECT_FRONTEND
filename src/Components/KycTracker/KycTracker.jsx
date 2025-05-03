@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Check, UploadCloud, Camera } from "lucide-react";
 import axios from "axios";
-import { baseUrl, getUserId } from "../utils";
+import { baseUrl, getUserId } from "../../utils";
 import "./KycTracker.css";
 
 const steps = [

@@ -4,7 +4,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "./LandingPage.css"; // <-- External CSS
 import { Link } from "react-router-dom";
-
+import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 const features = [
   { title: "Authentication & Registration", desc: "Secure sign-up, email OTP, and login for all users.", icon: "bi-person-check" },
   { title: "KYC & Consent", desc: "Stepwise KYC with consent modals and data privacy.", icon: "bi-shield-lock" },
@@ -34,12 +35,27 @@ const faqs = [
 ];
 
 export default function LandingPage() {
+   const navigate=useNavigate()
+   useEffect(() => {
+    const token = localStorage.getItem("token");
+    const role = localStorage.getItem("role");
+  
+    if (token) {
+      if (role === "ADMIN") {
+        navigate("/admindashboard");
+      } else {
+        navigate("/dashboard");
+      }
+    }
+    // ❌ Do not redirect if no token
+  }, []);
+  
   return (
     <div className="landing-page  pt-5">
       {/* Navbar */}
       <nav className="navbar navbar-expand-lg bg-white shadow-sm p-4 fixed-top ">
         <div className="container">
-          <a className="navbar-brand fw-bold text-primary" href="#">HexaEdge </a>
+          <a className="navbar-brand fw-bold text-primary" href="#">Hexa<span className="text-dark">Edge</span> </a>
           <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
             <span className="navbar-toggler-icon"></span>
           </button>

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './Profile.css';
+import axios from "../../utils";
 import {
   FiEye,
   FiUser,
@@ -21,24 +22,33 @@ function Profile() {
   const [modalTitle, setModalTitle] = useState('');
 
   useEffect(() => {
-    fetch(`http://localhost:9999/api/user/profile/${id}`)
-      .then(res => res.json())
-      .then(data => setProfile(data))
-      .catch(err => console.error('Failed to load profile:', err));
-  }, []);
+    const fetchProfile = async () => {
+      try {
+        const response = await axios.get(`/user/profile/${id}`);
+        setProfile(response.data);
+      } catch (error) {
+        console.error('Failed to load profile:', error);
+      }
+    };
+  
+    fetchProfile();
+  }, [id]);
+  
 
-  const openModal = (title, imageUrl) => {
+  const openModal = (title, fileUrl) => {
+    const isPdf = fileUrl.endsWith('.pdf');
     setModalTitle(title);
-    setModalImage(imageUrl);
+    setModalImage({ url: fileUrl, isPdf });
   };
+  
 
   const closeModal = () => {
     setModalImage(null);
     setModalTitle('');
   };
-
+  
   if (!profile) return <div className="text-muted p-4">Loading...</div>;
-
+  
   return (
     <div className="container mt-4">
       <div className="card p-4 shadow-sm">
@@ -149,20 +159,31 @@ function Profile() {
 
       {/* Modal Preview */}
       {modalImage && (
-        <div className="modal show d-block" tabIndex="-1" onClick={closeModal} style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
-          <div className="modal-dialog modal-lg modal-dialog-centered" onClick={e => e.stopPropagation()}>
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">{modalTitle}</h5>
-                <button type="button" className="btn-close" onClick={closeModal}></button>
-              </div>
-              <div className="modal-body text-center">
-                <img src={modalImage} alt={modalTitle} className="img-fluid rounded border" />
-              </div>
-            </div>
-          </div>
+  <div className="modal show d-block" tabIndex="-1" onClick={closeModal} style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
+    <div className="modal-dialog modal-lg modal-dialog-centered" onClick={e => e.stopPropagation()}>
+      <div className="modal-content">
+        <div className="modal-header">
+          <h5 className="modal-title">{modalTitle}</h5>
+          <button type="button" className="btn-close" onClick={closeModal}></button>
         </div>
-      )}
+        <div className="modal-body text-center">
+          {modalImage.isPdf ? (
+            <iframe
+              src={modalImage.url}
+              width="100%"
+              height="500px"
+              title="PDF Preview"
+              className="border rounded"
+            ></iframe>
+          ) : (
+            <img src={modalImage.url} alt={modalTitle} className="img-fluid rounded border" />
+          )}
+        </div>
+      </div>
+    </div>
+  </div>
+)}
+
     </div>
   );
 }
