@@ -37,7 +37,7 @@ const lastName = fullName.split(" ").slice(-1)[0];
         navigate("/admindashboard");
       } else {
         navigate("/dashboard");
-      }
+      } 
     } else {
       // When selecting profile
       navigate("/profile");
@@ -51,7 +51,7 @@ const lastName = fullName.split(" ").slice(-1)[0];
   };
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-light bg-white shadow-sm p-4 position-relative">
+    <nav className="navbar navbar-expand-lg navbar-light bg-white shadow-sm p-4 position-relative ">
       <div className="container">
 
         {/* Left: Logo */}
@@ -89,7 +89,7 @@ const lastName = fullName.split(" ").slice(-1)[0];
 
 
             {/* Dropdown Icon */}
-            <span onClick={toggleDropdown} style={{ cursor: 'pointer' }}>
+            <span onClick={toggleDropdown} style={{ cursor: 'pointer' }} data-testid="dropdown-icon">
               <IoMdArrowDropdown size={20} />
             </span>
           </button>

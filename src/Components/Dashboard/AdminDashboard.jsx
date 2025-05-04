@@ -77,11 +77,18 @@ const AdminDashboard = () => {
     setIconPreview(file ? URL.createObjectURL(file) : null);
   };
 
-  const filteredUsers = users
-    .filter((user) => (filter === 'All' ? true : user.kycStatus === filter))
-    .filter((user) =>
-      user.fullName.toLowerCase().includes(nameFilter.toLowerCase())
-    );
+ const filteredUsers = users
+  .filter((user) => {
+    if (filter === 'All') return true;
+    if (filter === 'PENDING') {
+      return ['PENDING', 'STEP 1 COMPLETED', 'STEP 2 COMPLETED'].includes(user.kycStatus);
+    }
+    return user.kycStatus === filter;
+  })
+  .filter((user) =>
+    user.fullName.toLowerCase().includes(nameFilter.toLowerCase())
+  );
+
 
   const indexOfLastUser = currentPage * usersPerPage;
   const indexOfFirstUser = indexOfLastUser - usersPerPage;
