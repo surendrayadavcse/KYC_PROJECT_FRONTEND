@@ -131,7 +131,21 @@ const Register = () => {
       className="container-fluid d-flex justify-content-center align-items-center"
       style={{ minHeight: "100vh", background: "#f5f7ff" }}
     >
-      <ToastContainer />
+      <ToastContainer
+             position="top-center"
+             autoClose={3000}
+             closeOnClick
+             pauseOnHover
+             hideProgressBar
+             newestOnTop
+             toastStyle={{
+               background: '#333',
+               color: '#fff',
+               borderRadius: '8px',
+               padding: '12px 20px',
+               fontSize: '16px',
+             }}
+           />
       <div className="row bg-white shadow rounded-4 w-100 p-5 min-vh-100">
         <div className="col-md-6 pe-md-5">
           <div className="text-center mb-4">
