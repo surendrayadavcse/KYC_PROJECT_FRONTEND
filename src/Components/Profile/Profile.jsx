@@ -54,7 +54,7 @@ function Profile() {
   
   if (!profile)
     return (
-      <div className="d-flex align-items-center justify-content-center p-4 gap-2 ">
+      <div className="d-flex align-items-center justify-content-center paddingtop gap-2 mt-5">
         <div className="spinner-grow text-primary" role="status" />
         <span>Loading...</span>
       </div>
