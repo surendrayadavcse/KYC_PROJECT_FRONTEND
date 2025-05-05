@@ -98,8 +98,8 @@ const AdminDashboard = () => {
   const handlePageChange = (pageNum) => setCurrentPage(pageNum);
 
   return (
-    <div className="bg-light min-vh-100 py-4">
-      <div className="container">
+    <div className="bg-light min-vh-100 py-4 ">
+      <div className="container paddingtopadmin">
 
         {/* Stats */}
         <div className="row text-center mb-4">

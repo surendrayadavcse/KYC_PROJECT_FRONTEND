@@ -33,11 +33,12 @@ function AppWrapper() {
 
   return (
     <>
-    <nav className="paddingbottom">
+   
   {/* navbar content */}
 
       {!hideNavbarPaths.includes(location.pathname) && <Navbar />}
-      </nav>
+    
+    
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/register" element={<Register />} />
@@ -98,7 +99,7 @@ function AppWrapper() {
           }
         />
       </Routes>
-
+  
       <ToastContainer position="middle" autoClose={2000} />
     </>
   );
