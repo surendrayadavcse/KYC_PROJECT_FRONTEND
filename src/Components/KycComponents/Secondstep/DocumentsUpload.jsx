@@ -79,23 +79,32 @@ function DocumentsUpload() {
     const fetchKycDetails = async () => {
       try {
         const { data } = await axios.get(`/kyc/documentsdata/${userId}`);
-        console.log(data,"i a data")
-        if (data?.aadharNumber && data?.panNumber) {
+        console.log(data, "i a data");
+  
+        if (data?.aadharNumber) {
           setAadhaarNumber(data.aadharNumber);
           setAadhaarPreview(data.aadharImageUrl);
           setAadhaarVerified(true);
+        }
+  
+        if (data?.panNumber) {
           setPanNumber(data.panNumber);
           setPanPreview(data.panImageUrl);
           setPanVerified(true);
+        }
+  
+        if (data?.aadharNumber && data?.panNumber) {
           setIsStep2Completed(true);
         }
+  
       } catch (err) {
         console.error("Failed to fetch KYC details:", err);
       }
     };
-
+  
     fetchKycDetails();
   }, []);
+  
 
   const getDB = async () => {
     return await openDB('KycDocumentsDB', 1, {
@@ -236,7 +245,9 @@ function DocumentsUpload() {
     try {
       const res = await axios.get(`user/getemailbyid/${userId}`);
       const email = res.data;
-      await axios.get(`${baseUrl}/getotpfordoc/${email}`);
+      const otpEndpoint = type === 'pan' ? '/getotpforpan' : '/getotpfordoc';
+      await axios.get(`${baseUrl}${otpEndpoint}/${email}`);
+      
     } catch (err) {
       alert("Failed to send OTP.");
       setModalOpen(false);
@@ -311,7 +322,9 @@ function DocumentsUpload() {
     try {
       const res = await axios.get(`user/getemailbyid/${userId}`);
       const email = res.data;
-      await axios.get(`${baseUrl}/getotpfordoc/${email}`);
+      const otpEndpoint = otpType === 'pan' ? '/getotpforpan' : '/getotpfordoc';
+await axios.get(`${baseUrl}${otpEndpoint}/${email}`);
+        
     } catch (err) {
       alert("Failed to resend OTP.");
     }
@@ -385,20 +398,27 @@ function DocumentsUpload() {
 
           {/* PAN Upload */}
           <div className="upload-box mb-3" onClick={handlePanClick}>
-            {panPreview ? (
-              <>
-                <img src={panPreview} alt="PAN Preview" className="upload-preview" />
-                {!isStep2Completed && <FaTimesCircle className="upload-remove" onClick={removePan} />}
-              </>
-            ) : (
-              <>
-                <FaCloudUploadAlt size={50} className="upload-icon" />
-                <p className="upload-text">Upload PAN Card</p>
-                <p className="upload-subtext">Please upload a clear image of your PAN card</p>
-              </>
-            )}
-            <input type="file" onChange={handlePanUpload} ref={panInputRef} className="d-none" />
-          </div>
+  {panPreview ? (
+    <>
+      {panFile?.type === 'application/pdf' ? (
+        <div className="flex items-center space-x-2 p-2 border rounded-md bg-gray-50">
+          <FaFilePdf style={{ color: 'red', fontSize: '24px' }} />
+          <span className="text-sm text-gray-700">PDF file uploaded</span>
+        </div>
+      ) : (
+        <img src={panPreview} alt="PAN Preview" className="upload-preview" />
+      )}
+      {!isStep2Completed && <FaTimesCircle className="upload-remove" onClick={removePan} />}
+    </>
+  ) : (
+    <>
+      <FaCloudUploadAlt size={50} className="upload-icon" />
+      <p className="upload-text">Upload PAN Card</p>
+      <p className="upload-subtext">Please upload a clear image or PDF of your PAN card</p>
+    </>
+  )}
+  <input type="file" accept="image/*,application/pdf" onChange={handlePanUpload} ref={panInputRef} className="d-none" />
+</div>
 
           {panMessage && <div className={`mb-3 ${panError ? 'text-danger' : 'text-success'}`}>{panMessage}</div>}
           {panNumber && (
