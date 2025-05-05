@@ -20,12 +20,16 @@ function Profile() {
   const [profile, setProfile] = useState(null);
   const [modalImage, setModalImage] = useState(null);
   const [modalTitle, setModalTitle] = useState('');
-
   useEffect(() => {
     const fetchProfile = async () => {
       try {
+        const startTime = Date.now();
         const response = await axios.get(`/user/profile/${id}`);
-        setProfile(response.data);
+        const elapsed = Date.now() - startTime;
+        const delay = Math.max(1000 - elapsed, 0); // Ensure 2 seconds minimum delay
+        setTimeout(() => {
+          setProfile(response.data);
+        }, delay);
       } catch (error) {
         console.error('Failed to load profile:', error);
       }
@@ -33,6 +37,7 @@ function Profile() {
   
     fetchProfile();
   }, [id]);
+  
   
 
   const openModal = (title, fileUrl) => {
@@ -47,7 +52,14 @@ function Profile() {
     setModalTitle('');
   };
   
-  if (!profile) return <div className="text-muted p-4">Loading...</div>;
+  if (!profile)
+    return (
+      <div className="d-flex align-items-center justify-content-center p-4 gap-2">
+        <div className="spinner-grow text-primary" role="status" />
+        <span>Loading...</span>
+      </div>
+    );
+  
   const isAdmin = profile.role === 'ADMIN';
   return (
     <div className="container mt-4">

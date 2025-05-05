@@ -6,12 +6,14 @@ import { toast } from "react-toastify";
 import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import { useKyc } from "../../context/KycContext"; 
+import ForgotPasswordModal from "./ForgotPasswordModal"; 
 
 const Login = () => {
   const { refreshKycStatus } = useKyc(); 
   const [loginData, setLoginData] = useState({ email: "", password: "" });
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [showForgotModal, setShowForgotModal] = useState(false);
   const { loading } = useSelector((state) => state.user);
   
   const handleChange = (e) => {
@@ -37,6 +39,7 @@ const Login = () => {
 
   return (
     <>  
+     <ForgotPasswordModal show={showForgotModal} handleClose={() => setShowForgotModal(false)} />
       <ToastContainer
         position="top-center"
         autoClose={3000}
@@ -95,7 +98,16 @@ const Login = () => {
 
               <div className="d-flex justify-content-between mb-3">
                 <div></div>
-                <Link to="/forgot-password" className="text-decoration-none text-primary">Forgot password?</Link>
+                <div className="d-flex justify-content-between mb-3">
+        <div></div>
+        <span
+          className="text-decoration-none text-primary"
+          style={{ cursor: "pointer" }}
+          onClick={() => setShowForgotModal(true)}
+        >
+          Forgot password?
+        </span>
+      </div>
               </div>
 
               <button type="submit" className="btn btn-primary w-100" disabled={loading}>
