@@ -98,10 +98,10 @@ const Login = () => {
 
               <div className="d-flex justify-content-between mb-3">
                 <div></div>
-                <div className="d-flex justify-content-between mb-3">
+                <div className="d-flex justify-content-between ">
         <div></div>
         <span
-          className="text-decoration-none text-primary"
+          className="text-decoration-none text-primary "
           style={{ cursor: "pointer" }}
           onClick={() => setShowForgotModal(true)}
         >
@@ -116,12 +116,12 @@ const Login = () => {
 
               <p className="mt-3">
                 <b>Don't have an account? </b>
-                <Link to="/register" className="text-primary">Sign Up</Link>
+                <Link to="/register" className="text-primary text-decoration-none"><b>Sign Up</b></Link>
               </p>
             </form>
           </div>
 
-          <div className="col-md-6 d-flex flex-column align-items-center justify-content-center text-center px-4">
+          <div className="col-md-6 d-flex flex-column align-items-center justify-content-center text-center px-5">
             <img
               src="login.png"
               alt="KYC Illustration"
@@ -138,9 +138,9 @@ const Login = () => {
               Complete your KYC to access all services securely.
             </div>
 
-            <div className="row w-150 text-start small">
-              <div className="col-6 mb-2"><i className="bi bi-bank me-2 text-primary fs-2"></i>Open Bank Account</div>
-              <div className="col-6 mb-2"><i className="bi bi-file-earmark-text me-2 text-primary fs-2"></i>Apply for Loan</div>
+            <div className="row w-150 text-start small px-5">
+              <div className="col-6 mb-3 "><i className="bi bi-bank me-2 text-primary fs-2"></i>Open Bank Account</div>
+              <div className="col-6 mb-3"><i className="bi bi-file-earmark-text me-2 text-primary fs-2"></i>Apply for Loan</div>
               <div className="col-6"><i className="bi bi-cash-stack me-2 text-primary fs-2"></i>Track Repayments</div>
               <div className="col-6"><i className="bi bi-bar-chart-line me-2 text-primary fs-2"></i>View Loan Status</div>
             </div>

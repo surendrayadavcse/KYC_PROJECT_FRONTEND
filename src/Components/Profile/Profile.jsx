@@ -54,7 +54,7 @@ function Profile() {
   
   if (!profile)
     return (
-      <div className="d-flex align-items-center justify-content-center p-4 gap-2">
+      <div className="d-flex align-items-center justify-content-center p-4 gap-2 ">
         <div className="spinner-grow text-primary" role="status" />
         <span>Loading...</span>
       </div>
@@ -62,7 +62,7 @@ function Profile() {
   
   const isAdmin = profile.role === 'ADMIN';
   return (
-    <div className="container mt-4">
+    <div className="container mt-4 paddingtop">
       <div className="card p-4 shadow-sm">
         <div className="d-flex align-items-center mb-4">
           <img

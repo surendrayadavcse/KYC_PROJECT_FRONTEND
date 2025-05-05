@@ -33,11 +33,16 @@ function AppWrapper() {
 
   return (
     <>
+    <nav className="paddingbottom">
+  {/* navbar content */}
+
       {!hideNavbarPaths.includes(location.pathname) && <Navbar />}
+      </nav>
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
+
         <Route path="/consent" element={<ConsentForm />} />
         <Route path="/datausage" element={<DataUsage />} />
         <Route

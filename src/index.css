@@ -6,4 +6,18 @@
   
   /* font-family: "Hiragino Mincho ProN" !; */
 }
-
+.navbar-fixed {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1050; /* high enough to stay on top */
+  width: 100%;
+  background-color: white; /* or whatever your navbar bg is */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+ 
+  
+}
+.paddingbottom{
+  padding-top: 90px;
+}

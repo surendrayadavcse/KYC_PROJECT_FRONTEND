@@ -1,7 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
-import { getUserId } from '../utils';
-// import axiosInstance from '../utils';
+import axios from '../utils';
+
 
 // Fetch KYC status from the backend
 const userId=localStorage.getItem("id")
@@ -11,7 +10,7 @@ export const fetchKycStatusThunk = createAsyncThunk(
     // console.log(userId)
     try {
       const response = await axios.get(`/user/kycstatus/${userId}`);
-      console.log(response.data.kycStatus)
+      // console.log(response.data.kycStatus)
       return response.data.kycStatus;
     } catch (err) {
       return rejectWithValue("Error fetching KYC status");

@@ -302,7 +302,7 @@ const Register = () => {
 
                 <div className="text-center mt-3">
                   <b>
-                    Already have an account? <Link to="/login">Login</Link>
+                    Already have an account? <Link to="/login" className="text-decoration-none">Login</Link>
                   </b>
                 </div>
               </Form>
@@ -323,19 +323,19 @@ const Register = () => {
           </p>
 
           <div className="row w-75 mt-3 mb-2">
-            <div className="col-6 mb-2 d-flex align-items-center gap-2">
+            <div className="col-6 mb-4 d-flex align-items-center gap-2">
               <i className="bi bi-bank fs-5 text-primary"></i>
               <span className="small">Create Bank Account</span>
             </div>
-            <div className="col-6 mb-2 d-flex align-items-center gap-2">
+            <div className="col-6 mb-4 d-flex align-items-center gap-2">
               <i className="bi bi-cash-stack fs-5 text-primary"></i>
               <span className="small">Apply for Loans</span>
             </div>
-            <div className="col-6 mb-2 d-flex align-items-center gap-2">
+            <div className="col-6 mb-4 d-flex align-items-center gap-2">
               <i className="bi bi-repeat fs-5 text-primary"></i>
               <span className="small">Track Repayments</span>
             </div>
-            <div className="col-6 mb-2 d-flex align-items-center gap-2">
+            <div className="col-6 mb-4 d-flex align-items-center gap-2">
               <i className="bi bi-wallet2 fs-5 text-primary"></i>
               <span className="small">Digital Wallet</span>
             </div>
