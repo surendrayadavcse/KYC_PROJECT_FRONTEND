@@ -51,8 +51,8 @@ const lastName = fullName.split(" ").slice(-1)[0];
   };
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-light bg-white shadow-sm p-4 position-relative ">
-      <div className="container">
+    <nav className="navbar navbar-expand-lg navbar-light bg-white shadow-sm p-4 position-relative navbar-fixed">
+      <div className="container ">
 
         {/* Left: Logo */}
         <span className="navbar-brand fw-bold text-primary">
