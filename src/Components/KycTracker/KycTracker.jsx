@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Check, UploadCloud, Camera } from "lucide-react";
-import axios from "axios";
-import { baseUrl, getUserId } from "../../utils";
+
+import axios from "../../utils";
 import "./KycTracker.css";
 
 const steps = [
@@ -29,12 +29,13 @@ const KycTracker = () => {
   const [kycStatus, setKycStatus] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const userId = getUserId();
+  
+  const userId=localStorage.getItem("id")
 
   useEffect(() => {
     const fetchKycStatus = async () => {
       try {
-        const response = await axios.get(`${baseUrl}/user/kycstatus/${userId}`);
+        const response = await axios.get(`/user/kycstatus/${userId}`);
         setKycStatus(response.data.kycStatus);
       } catch (err) {
         console.error("Error fetching KYC status:", err);

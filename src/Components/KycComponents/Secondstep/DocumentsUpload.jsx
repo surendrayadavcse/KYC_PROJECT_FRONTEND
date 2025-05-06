@@ -12,7 +12,7 @@ import { FaFilePdf } from 'react-icons/fa';
 
 import axios from '../../../utils';
 
-const baseUrl = import.meta.env.VITE_API_BASE_URL;
+
 import { FaInfoCircle } from 'react-icons/fa';
 function DocumentsUpload() {
   const [showInfoModal, setShowInfoModal] = useState(false);
@@ -246,7 +246,7 @@ function DocumentsUpload() {
       const res = await axios.get(`user/getemailbyid/${userId}`);
       const email = res.data;
       const otpEndpoint = type === 'pan' ? '/getotpforpan' : '/getotpfordoc';
-      await axios.get(`${baseUrl}${otpEndpoint}/${email}`);
+      await axios.get(`${otpEndpoint}/${email}`);
       
     } catch (err) {
       alert("Failed to send OTP.");
@@ -283,16 +283,16 @@ function DocumentsUpload() {
     }
   
     try {
-      await axios.post(`${baseUrl}/${endpoint}`, formData);
+      await axios.post(`/${endpoint}`, formData);
       setModalOpen(false);
       if (otpType === 'aadhaar') {
         setAadhaarMessage("Aadhaar verified successfully!");
         setAadhaarVerified(true);
-        await saveToIndexedDB('aadhaar', aadhaarFile, { extractedText: aadhaarNumber, verified: true });
+        await removeFromIndexedDB('aadhaar');
       } else {
         setPanMessage("PAN verified successfully!");
         setPanVerified(true);
-        await saveToIndexedDB('pan', panFile, { extractedText: panNumber, verified: true });
+        await removeFromIndexedDB('pan');
       }
     } catch (err) {
       setOtpError(err.response?.data?.message || "OTP verification failed");
@@ -323,7 +323,7 @@ function DocumentsUpload() {
       const res = await axios.get(`user/getemailbyid/${userId}`);
       const email = res.data;
       const otpEndpoint = otpType === 'pan' ? '/getotpforpan' : '/getotpfordoc';
-await axios.get(`${baseUrl}${otpEndpoint}/${email}`);
+await axios.get(`${otpEndpoint}/${email}`);
         
     } catch (err) {
       alert("Failed to resend OTP.");

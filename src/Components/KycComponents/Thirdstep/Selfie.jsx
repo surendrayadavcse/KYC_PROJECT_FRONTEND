@@ -7,7 +7,7 @@ import axios from '../../../utils';
 import KycLayout from '../Shared/KycLayout';
 import { useKyc } from '../../../context/KycContext';
 
-const baseUrl = import.meta.env.VITE_API_BASE_URL;
+
 
 function Selfie() {
   const { setKycStatus } = useKyc();
@@ -162,7 +162,7 @@ function Selfie() {
       return;
     }
     setKycStatus('KYC COMPLETED');
-    localStorage.setItem('kycStatus', 'KYC COMPLETED');
+
     navigate('/dashboard');
   };
 

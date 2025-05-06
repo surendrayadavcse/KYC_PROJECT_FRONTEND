@@ -37,8 +37,8 @@ const Register = () => {
     fullName: Yup.string().required("Full name is required"),
     email: Yup.string().email("Invalid email").required("Email is required"),
     mobile: Yup.string()
-      .matches(/^[0-9]{10}$/, "Mobile must be 10 digits")
-      .required("Mobile number is required"),
+  .matches(/^[6-9]\d{9}$/, "Mobile must start with 6, 7, 8, or 9 and be 10 digits")
+  .required("Mobile number is required"),
     password: Yup.string().min(8, "Password must be at least 8 characters").required("Password is required"),
   });
 
@@ -173,7 +173,7 @@ const Register = () => {
   name="fullName"
   className="form-control"
   placeholder="Enter your full name"
-  readOnly={otpVerified}
+  // readOnly={otpVerified}
   onChange={(e) => {
     const onlyChars = e.target.value.replace(/[^A-Za-z\s]/g, '');
     setFieldValue('fullName', onlyChars);
@@ -190,7 +190,7 @@ const Register = () => {
   name="mobile"
   className="form-control"
   placeholder="+91 8247380327"
-  readOnly={otpVerified}
+  // readOnly={otpVerified}
   onChange={(e) => {
     let onlyNums = e.target.value.replace(/\D/g, '');
     if (onlyNums.length > 10) {

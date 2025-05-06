@@ -30,7 +30,7 @@ const ConsentForm = ({ isOpen, onClose }) => {
     try {
       const response = await axios.post(`/consent/submit`, consentRequestDTO);
       console.log('Consent submitted:', response.data);
-      localStorage.setItem("consentGiven", "true");
+   
       navigate('/basicdetails');
     } catch (error) {
       console.error('Error submitting consent:', error);
