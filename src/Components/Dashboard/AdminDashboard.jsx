@@ -7,6 +7,9 @@ import { useNavigate } from 'react-router-dom';
 import './AdminDashboard.css';
 
 const AdminDashboard = () => {
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { list: services, error } = useSelector((state) => state.services);

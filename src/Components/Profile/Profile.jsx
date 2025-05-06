@@ -16,6 +16,9 @@ import {
 } from 'react-icons/fi';
 
 function Profile() {
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
   const id = localStorage.getItem("id");
   const [profile, setProfile] = useState(null);
   const [modalImage, setModalImage] = useState(null);

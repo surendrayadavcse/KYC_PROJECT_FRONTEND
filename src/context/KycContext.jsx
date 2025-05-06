@@ -1,9 +1,9 @@
 
 import React, { createContext, useContext, useEffect, useState } from "react";
-import axios from "axios";
+import axios from "../utils";
 
 const KycContext = createContext();
-const baseUrl = import.meta.env.VITE_API_BASE_URL;
+
 
 export const KycProvider = ({ children }) => {
   const [kycStatus, setKycStatus] = useState(null);
@@ -29,7 +29,7 @@ export const KycProvider = ({ children }) => {
   const fetchKycStatus = async () => {
     if (!userId) return;
     try {
-      const response = await axios.get(`${baseUrl}/user/kycstatus/${userId}`);
+      const response = await axios.get(`/user/kycstatus/${userId}`);
       const status = response.data.kycStatus;
       setKycStatus(status);
       setIsKycFetched(true);

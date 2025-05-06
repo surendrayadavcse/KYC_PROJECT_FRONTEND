@@ -55,10 +55,13 @@ const lastName = fullName.split(" ").slice(-1)[0];
       <div className="container ">
 
         {/* Left: Logo */}
-        <span className="navbar-brand fw-bold text-primary">
-          Hexa<span className="text-dark">Edge</span>
-        </span>
-
+        <span
+  className="navbar-brand fw-bold text-primary"
+  onClick={() => navigate(role === "ADMIN" ? "/admindashboard" : "/dashboard")}
+  style={{ cursor: 'pointer' }}
+>
+  Hexa<span className="text-dark">Edge</span>
+</span>
         {/* Center: Dashboard/Profile Text */}
         <div className="d-none d-lg-block mx-auto">
           <span className="text-secondary small fw-bold text-uppercase">
@@ -81,7 +84,12 @@ const lastName = fullName.split(" ").slice(-1)[0];
            <FaUserCircle size={30} className="me-2 " style={{ cursor: 'pointer' }} />
 
            <div className="text-start me-2">
-  <div className="fw-bold medium text-black">{lastName}</div>
+  <div className="fw-bold medium "   style={{
+              backgroundColor: selected ? '#007BFF' : 'white',
+              color: selected ? 'white' : 'blue',
+           
+            
+            }}>{lastName}</div>
   {role === 'ADMIN' && (
     <div className="small" style={{ fontSize: '0.7rem' }}>{role}</div>
   )}

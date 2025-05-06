@@ -13,9 +13,12 @@ import { BsCheckCircleFill, BsHourglassSplit, BsCircle } from "react-icons/bs";
 import { FaUserCircle, FaCameraRetro } from "react-icons/fa";
 import { HiDocumentText } from "react-icons/hi";
 
-const baseUrl = import.meta.env.VITE_API_BASE_URL;
+
 
 const Dashboard = () => {
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, []);
   const userId = localStorage.getItem("id");
   const { list: services } = useSelector((state) => state.services);
   const dispatch = useDispatch();
@@ -85,7 +88,7 @@ const Dashboard = () => {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 1 }}
-          className="position-fixed top-0 start-0 w-100 h-100 d-flex flex-column justify-content-center align-items-center bg-white "
+          className="position-fixed top-0 start-0 w-100 h-100 d-flex flex-column justify-content-center align-items-center bg-white"
           style={{ zIndex: 9999 }}
         >
           <motion.div
@@ -102,7 +105,7 @@ const Dashboard = () => {
         </motion.div>
       )}
 
-      <div className="container mt-4 ">
+      <div className="container mt-4 paddingtop">
         {/* KYC Status Completed */}
         {kycStatus === "KYC COMPLETED" && (
   <div className="kyc-verified-card d-flex align-items-start p-4 mb-4 rounded shadow-sm">
