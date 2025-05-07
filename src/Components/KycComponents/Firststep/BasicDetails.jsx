@@ -15,7 +15,37 @@
     FiArrowLeft,
   } from "react-icons/fi";
 
+
+
   const BasicDetails = () => {
+
+    const handlePincodeChange = async (e) => {
+      const value = e.target.value;
+      setPincode(value);
+    
+      if (/^\d{6}$/.test(value)) {
+        try {
+          const res = await fetch(`https://api.postalpincode.in/pincode/${value}`);
+          const data = await res.json();
+    
+          if (data[0].Status === "Success") {
+            const postOffice = data[0].PostOffice[0];
+            setCity(postOffice.District);
+            setState(postOffice.State);
+          } else {
+            setFormErrors((prev) => ({
+              ...prev,
+              pincode: "Invalid or unrecognized pincode.",
+            }));
+            setCity("");
+            setState("");
+          }
+        } catch (err) {
+          console.error("Pincode API error:", err);
+        }
+      }
+    };
+    
     const [showModal, setShowModal] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
     const [formErrors, setFormErrors] = useState({});
@@ -243,13 +273,14 @@
                       Pincode
                     </label>
                     <input
-                      type="text"
-                      value={pincode}
-                      onChange={(e) => setPincode(e.target.value)}
-                      className="form-control"
-                      placeholder="Enter pincode"
-                      readOnly={isReadOnly}
-                    />
+  type="text"
+  value={pincode}
+  onChange={handlePincodeChange}
+  className="form-control"
+  placeholder="Enter pincode"
+  readOnly={isReadOnly}
+/>
+
                     {formErrors.pincode && <div className="text-danger">{formErrors.pincode}</div>}
                   </div>
 

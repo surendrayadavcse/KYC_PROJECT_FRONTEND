@@ -39,7 +39,12 @@ const Register = () => {
     mobile: Yup.string()
   .matches(/^[6-9]\d{9}$/, "Mobile must start with 6, 7, 8, or 9 and be 10 digits")
   .required("Mobile number is required"),
-    password: Yup.string().min(8, "Password must be at least 8 characters").required("Password is required"),
+  password: Yup.string()
+  .required("Password is required")
+  .min(8, "Password must be at least 8 characters")
+  .matches(/[A-Z]/, "Password must contain at least one uppercase letter")
+  .matches(/[!@#$%^&*(),.?":{}|<>]/, "Password must contain at least one special character"),
+
   });
 
   const requestOtp = async (values) => {
@@ -190,7 +195,7 @@ const Register = () => {
   name="mobile"
   className="form-control"
   placeholder="+91 8247380327"
-  // readOnly={otpVerified}
+  readOnly={otpVerified}
   onChange={(e) => {
     let onlyNums = e.target.value.replace(/\D/g, '');
     if (onlyNums.length > 10) {
