@@ -92,7 +92,12 @@ const AdminDashboard = () => {
     user.fullName.toLowerCase().includes(nameFilter.toLowerCase())
   );
 
-
+  const formatDate = (dateStr) => {
+    const [day, month, year] = dateStr.split('-');
+    const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    return `${day}-${monthNames[parseInt(month, 10) - 1]}-${year}`;
+  };
+  
   const indexOfLastUser = currentPage * usersPerPage;
   const indexOfFirstUser = indexOfLastUser - usersPerPage;
   const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
@@ -173,11 +178,8 @@ const AdminDashboard = () => {
                     <td>{user.fullName}</td>
                     <td>{user.email}</td>
                     <td>
-  {new Date(user.registereddate).toLocaleDateString('en-GB', {
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric',
-  }).replace(/ /g, '-')}
+                    <span>{formatDate(user.registereddate)}</span>
+
 </td>
                     <td>
                       <span className={`badge bg-${user.kycStatus === 'KYC COMPLETED' ? 'success' : 'warning'}`}>
